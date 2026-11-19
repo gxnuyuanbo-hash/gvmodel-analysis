@@ -1,0 +1,1 @@
+max Chebyshev error 0.0042

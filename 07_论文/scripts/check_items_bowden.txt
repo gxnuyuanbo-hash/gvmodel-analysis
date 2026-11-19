@@ -1,0 +1,27 @@
+                   item   solution difficulty  in_bowden bowden_solution    bowden_variant
+EXTINGUISHER/TRUCK/CAMP       FIRE       Easy      False                                  
+      SURF/PADDLE/SKATE      BOARD       Easy      False                                  
+     FOOT/BASKET/VOLLEY       BALL       Easy      False                 basket/eight/snow
+        JAY/MOCKING/FLU       BIRD       Easy      False                                  
+           DEW/COMB/BEE      HONEY       Easy       True           honey                  
+      LOSER/THROAT/SPOT       SORE       Easy       True            sore                  
+       DUCK/FOLD/DOLLAR       BILL       Easy       True            bill                  
+      BEAT/RATE/DISEASE      HEART       Easy      False                                  
+   LIGHT/BIRTHDAY/STICK     CANDLE     Medium       True          candle                  
+        OPERA/HAND/DISH       SOAP     Medium       True            soap                  
+        PALM/SHOE/HOUSE       TREE     Medium       True            tree                  
+        PLANE/SHIP/LINE        AIR     Medium      False                   force/line/mail
+       MOUSE/DEATH/SAND       TRAP     Medium      False                   mouse/bear/sand
+         RING/BOOK/SILK       WORM     Medium      False                                  
+       SHINE/LIGHT/BEAM   SUN/MOON     Medium      False                                  
+   SENSE/COURTESY/PLACE     COMMON     Medium       True          common                  
+           WET/DRY/FARM       LAND       Hard      False                                  
+       SPOON/CLOTH/CARD  TABLE/TEA       Hard       True           table                  
+      RAIN/TEST/STOMACH       ACID       Hard       True            acid                  
+         COVER/ARM/WEAR UNDER/BAND       Hard       True           under                  
+          CUT/CREAM/WAR       COLD       Hard       True            cold                  
+        BABY/SPRING/CAP     SHOWER       Hard       True          shower                  
+     OFF/MILITARY/FIRST       BASE       Hard       True            base                  
+       LINE/TABLE/SCALE       TIME       Hard      False                                  
+
+verbatim in Bowden & Jung-Beeman (2003): 13 of 24

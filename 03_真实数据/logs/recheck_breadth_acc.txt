@@ -1,0 +1,6 @@
+s1x  N =  99  breadth reliability 0.667  r(breadth, acc) 0.136  r(verification, acc) 0.920  r(breadth, verification) 0.474
+s2   N = 100  breadth reliability 0.617  r(breadth, acc) 0.270  r(verification, acc) 0.980  r(breadth, verification) 0.379
+pre  N =  50  breadth reliability 0.747  r(breadth, acc) 0.093  r(verification, acc) 0.940  r(breadth, verification) -0.090
+s1x  partial r(breadth, acc | verification) -0.871
+s2   partial r(breadth, acc | verification) -0.550
+pre  partial r(breadth, acc | verification) 0.523

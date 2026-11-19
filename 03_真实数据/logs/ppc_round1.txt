@@ -1,0 +1,35 @@
+== s1  N 100 
+overall acc obs 0.619 pred 0.023 | no-answer obs 0.095 pred 0.095 
+item acc r(obs,pred) 0.753  item no-answer r -0.756 
+SD person acc obs 0.147 pred 90% [ 0.026 0.036 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.115  r(breadth, person acc) -0.736 
+
+== s2  N 100 
+overall acc obs 0.613 pred 0.023 | no-answer obs 0.106 pred 0.105 
+item acc r(obs,pred) 0.747  item no-answer r -0.66 
+SD person acc obs 0.16 pred 90% [ 0.026 0.035 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.154  r(breadth, person acc) -0.77 
+
+== s1_prod  N 100 
+overall acc obs 0.619 pred 0.242 | no-answer obs 0.095 pred 0.096 
+item acc r(obs,pred) 0.607  item no-answer r -0.124 
+SD person acc obs 0.147 pred 90% [ 0.075 0.095 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.777  r(breadth, person acc) -0.043 
+
+== s2_prod  N 100 
+overall acc obs 0.613 pred 0.244 | no-answer obs 0.106 pred 0.106 
+item acc r(obs,pred) 0.601  item no-answer r -0.093 
+SD person acc obs 0.16 pred 90% [ 0.073 0.09 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.7  r(breadth, person acc) 0.156 
+
+== s1_prod_v  N 100 
+overall acc obs 0.619 pred 0.618 | no-answer obs 0.095 pred 0.096 
+item acc r(obs,pred) 0.737  item no-answer r 0.379 
+SD person acc obs 0.147 pred 90% [ 0.1 0.125 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.736  r(breadth, person acc) -0.134 
+
+== s2_prod_v  N 100 
+overall acc obs 0.613 pred 0.611 | no-answer obs 0.106 pred 0.108 
+item acc r(obs,pred) 0.752  item no-answer r 0.268 
+SD person acc obs 0.16 pred 90% [ 0.097 0.123 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.557  r(breadth, person acc) -0.102 

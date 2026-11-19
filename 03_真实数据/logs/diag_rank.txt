@@ -1,0 +1,15 @@
+sum      logit  -5.0  median rank  10.5  top1  0/24  top3  1/24
+sum      logit  -2.5  median rank  10.5  top1  0/24  top3  1/24
+sum      logit   0.0  median rank   9.0  top1  0/24  top3  1/24
+sum      logit   2.5  median rank   9.0  top1  0/24  top3  2/24
+sum      logit   5.0  median rank  16.0  top1  0/24  top3  2/24
+product  logit  -5.0  median rank   1.0  top1 14/24  top3 16/24
+product  logit  -2.5  median rank   1.0  top1 13/24  top3 16/24
+product  logit   0.0  median rank   1.0  top1 13/24  top3 16/24
+product  logit   2.5  median rank   6.0  top1  3/24  top3 10/24
+product  logit   5.0  median rank  16.0  top1  2/24  top3  5/24
+min      logit  -5.0  median rank   1.0  top1 15/24  top3 16/24
+min      logit  -2.5  median rank   1.0  top1 15/24  top3 16/24
+min      logit   0.0  median rank   1.0  top1 13/24  top3 18/24
+min      logit   2.5  median rank   9.5  top1  3/24  top3  7/24
+min      logit   5.0  median rank  18.0  top1  1/24  top3  5/24

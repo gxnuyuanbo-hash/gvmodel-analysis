@@ -1,0 +1,24 @@
+== s1x 
+Convergence: max rhat a 1.006  b 1.005 ; min ess_bulk a 693  b 1393 ; divergent a 0  b 0 
+  mu     stage a 0.57 [-0.29, 1.39] | stage b -0.17 [-0.99, 0.61] | b - a -0.74 [-1.93, 0.41]
+  sigma  stage a 4.07 [3.45, 4.78] | stage b 2.79 [2.24, 3.45] | b - a -1.28 [-2.14, -0.35]
+  gamma  stage a 0.15 [0.13, 0.16] | stage b 0.16 [0.13, 0.18] | b - a 0.01 [-0.02, 0.04]
+  kappa  stage a -1.79 [-2.20, -1.37] | stage b -1.72 [-2.22, -1.24] | b - a 0.06 [-0.58, 0.70]
+  delta  stage a 3.47 [3.34, 3.60] | stage b 4.13 [3.98, 4.29] | b - a 0.66 [0.46, 0.86]
+  tau    stage a 0.23 [0.02, 0.43] | stage b 0.52 [0.37, 0.69] | b - a 0.29 [0.03, 0.56]
+  rho    stage a 0.20 [-0.44, 0.71] | stage b 0.35 [0.05, 0.62] | b - a 0.16 [-0.42, 0.83]
+  persons: r(breadth a, b) = 0.609 ; r(verification a, b) = 0.421 
+  mean within-person change b - a: breadth -0.57 [-1.54, 0.35] ; verification 0.66 [0.48, 0.84] 
+  share of persons whose 90% interval of change excludes 0: breadth 0.162 ; verification 0.404 
+== s2 
+Convergence: max rhat a 1.004  b 1.007 ; min ess_bulk a 1142  b 1342 ; divergent a 0  b 0 
+  mu     stage a 0.11 [-0.67, 0.89] | stage b -0.13 [-0.90, 0.63] | b - a -0.24 [-1.31, 0.88]
+  sigma  stage a 3.19 [2.64, 3.79] | stage b 1.77 [1.32, 2.28] | b - a -1.42 [-2.17, -0.68]
+  gamma  stage a 0.16 [0.14, 0.18] | stage b 0.16 [0.14, 0.19] | b - a 0.00 [-0.03, 0.04]
+  kappa  stage a -1.44 [-1.92, -0.97] | stage b -1.45 [-1.97, -0.92] | b - a -0.00 [-0.72, 0.71]
+  delta  stage a 3.37 [3.18, 3.57] | stage b 4.13 [3.92, 4.35] | b - a 0.76 [0.47, 1.04]
+  tau    stage a 0.79 [0.62, 0.98] | stage b 0.78 [0.62, 0.97] | b - a -0.01 [-0.26, 0.25]
+  rho    stage a 0.58 [0.36, 0.76] | stage b 0.47 [0.16, 0.74] | b - a -0.11 [-0.47, 0.25]
+  persons: r(breadth a, b) = 0.371 ; r(verification a, b) = 0.66 
+  mean within-person change b - a: breadth -0.31 [-1.28, 0.70] ; verification 0.75 [0.53, 0.97] 
+  share of persons whose 90% interval of change excludes 0: breadth 0.2 ; verification 0.2 

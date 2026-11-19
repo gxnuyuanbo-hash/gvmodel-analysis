@@ -1,0 +1,4 @@
+items: 80 | nodes per item: 557 - 1085 | all diagonals = 1: TRUE 
+mean cosine of all pairs: 0.183 
+mean cosine of edges kept, similarity weights: 0.507 | distance weights: 0.052 
+share of similarity-TMFG edges also kept by distance-TMFG: 0 

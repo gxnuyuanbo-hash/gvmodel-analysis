@@ -1,0 +1,30 @@
+
+=== sim weights, 76 real items ===
+distinct success patterns among the 400 non-degenerate pairs: 74
+median combos (of 441) activating the answer: 110.5 | items activated in all 400: 10
+  initial 3, threshold 0.001: median combos activating answer = 28; share of (item, combo) success judgements that flip vs (30, .001) = 0.149
+  initial 300, threshold 0.001: median combos activating answer = 200; share of (item, combo) success judgements that flip vs (30, .001) = 0.134
+  initial 30, threshold 0.0: median combos activating answer = 400; share of (item, combo) success judgements that flip vs (30, .001) = 0.594
+
+=== dist weights, 76 real items ===
+distinct success patterns among the 400 non-degenerate pairs: 87
+median combos (of 441) activating the answer: 129.5 | items activated in all 400: 0
+  initial 3, threshold 0.001: median combos activating answer = 26; share of (item, combo) success judgements that flip vs (30, .001) = 0.222
+  initial 300, threshold 0.001: median combos activating answer = 233; share of (item, combo) success judgements that flip vs (30, .001) = 0.185
+  initial 30, threshold 0.0: median combos activating answer = 400; share of (item, combo) success judgements that flip vs (30, .001) = 0.625
+
+Home-turf recovery with real items, medians over 1,000 datasets (Spearman r):
+                    r_r    r_d  exact    acc  r_acc
+weights eps  N                                     
+dist    0.05 46   0.242  0.672  0.174  0.390 -0.652
+             100  0.236  0.668  0.180  0.387 -0.651
+        0.15 46   0.251  0.613  0.130  0.410 -0.621
+             100  0.256  0.616  0.120  0.412 -0.625
+        0.25 46   0.255  0.566  0.065  0.437 -0.590
+             100  0.250  0.555  0.070  0.437 -0.591
+sim     0.05 46   0.536  0.530  0.152  0.416 -0.532
+             100  0.534  0.525  0.160  0.415 -0.531
+        0.15 46   0.494  0.495  0.109  0.433 -0.496
+             100  0.499  0.498  0.100  0.434 -0.507
+        0.25 46   0.451  0.464  0.065  0.453 -0.471
+             100  0.443  0.459  0.060  0.453 -0.467

@@ -1,0 +1,3 @@
+K per item [35, 49, 29, 36, 40, 51, 70, 66, 62, 50, 74, 92, 60, 64, 51, 86, 104, 90, 81, 94, 103, 129, 124, 114] Kmax 129
+Chebyshev 12 terms, max abs error on grid 0.0024
+{'s1': {'N': 100, 'excluded': [], 'dropped': 49, 'missing': 49}, 's2': {'N': 100, 'excluded': [], 'dropped': 53, 'missing': 53}, 'pre': {'N': 50, 'excluded': ['pretest_36'], 'dropped': 51, 'missing': 27}}

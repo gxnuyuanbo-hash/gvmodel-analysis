@@ -1,0 +1,10 @@
+SWOW-EN18: 4 distinct success patterns among the 400 generating (r, d) pairs
+Medians over 1,000 datasets per cell (Spearman r between true and estimated parameter):
+            r_r    r_d  exact  same_pattern  n_est  acc_r
+eps  N                                                   
+0.05 50   0.319  0.328   0.00          0.94    3.0 -0.315
+     100  0.313  0.331   0.01          0.94    3.0 -0.310
+0.15 50   0.204  0.215   0.00          0.82    3.0 -0.251
+     100  0.200  0.223   0.01          0.83    4.0 -0.253
+0.25 50   0.133  0.149   0.00          0.70    4.0 -0.232
+     100  0.130  0.139   0.00          0.71    4.0 -0.215

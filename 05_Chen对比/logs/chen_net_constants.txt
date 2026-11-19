@@ -1,0 +1,4 @@
+initial   3, threshold 0.001: median combos activating target = 16 / 441; share of (network, combo) cells whose success differs from (30, .001) = 0.109
+initial  30, threshold 0.001: median combos activating target = 70 / 441; share of (network, combo) cells whose success differs from (30, .001) = 0.000
+initial 300, threshold 0.001: median combos activating target = 132 / 441; share of (network, combo) cells whose success differs from (30, .001) = 0.102
+initial  30, threshold 0.0: median combos activating target = 400 / 441; share of (network, combo) cells whose success differs from (30, .001) = 0.632

@@ -1,0 +1,17 @@
+== s1_2d  N 100 
+overall acc obs 0.619 pred 0.619 | no-answer obs 0.095 pred 0.095 
+item acc r(obs,pred) 0.751  item no-answer r 0.346 
+SD person acc obs 0.147 pred 90% [ 0.124 0.161 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.664  r(breadth, person acc) 0.141 
+
+== s2_2d  N 100 
+overall acc obs 0.613 pred 0.611 | no-answer obs 0.106 pred 0.106 
+item acc r(obs,pred) 0.747  item no-answer r 0.226 
+SD person acc obs 0.16 pred 90% [ 0.143 0.178 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.617  r(breadth, person acc) 0.281 
+
+== pre_2d  N 50 
+overall acc obs 0.625 pred 0.623 | no-answer obs 0.136 pred 0.137 
+item acc r(obs,pred) 0.704  item no-answer r 0.394 
+SD person acc obs 0.149 pred 90% [ 0.124 0.175 ]
+breadth reliability (var(pm)/(var(pm)+mean pv)) 0.733  r(breadth, person acc) 0.099 

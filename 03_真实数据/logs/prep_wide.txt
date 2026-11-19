@@ -1,0 +1,6 @@
+sum NC 12 max err 0.0563
+sum NC 16 max err 0.0136
+sum NC 20 max err 0.0054
+prod NC 12 max err 0.1476
+prod NC 16 max err 0.0340
+prod NC 20 max err 0.0080

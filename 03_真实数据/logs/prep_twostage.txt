@@ -1,0 +1,4 @@
+s1xa: N = 99, valid trials = 1898, coded = 1856, not in candidates = 42, accuracy = 0.483, no answer = 0.131
+s1xbm: N = 99, valid trials = 1898, coded = 1872, not in candidates = 26, accuracy = 0.653, no answer = 0.088
+s2a: N = 100, valid trials = 1520, coded = 1473, not in candidates = 47, accuracy = 0.464, no answer = 0.193
+s2bm: N = 100, valid trials = 1520, coded = 1500, not in candidates = 20, accuracy = 0.660, no answer = 0.097

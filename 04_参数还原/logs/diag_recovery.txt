@@ -1,0 +1,28 @@
+Warning message:
+package 'data.table' was built under R version 4.4.3 
+Lowest tail ESS rows:
+   dataset variable     rhat ess_bulk  ess_tail
+     <int>   <char>    <num>    <num>     <num>
+1:      14      tau 1.009716 318.9834  82.35532
+2:      97      tau 1.003334 654.8781 290.26746
+3:      14      rho 1.007267 800.7947 307.14156
+4:      68      rho 1.005912 972.3208 312.97068
+5:      16      tau 1.003654 668.9191 338.21600
+
+Rhat > 1.01 rows:
+   dataset variable     rhat ess_bulk ess_tail
+     <int>   <char>    <num>    <num>    <num>
+1:       2      tau 1.010754 1809.977 1343.613
+2:      42      tau 1.013356 1804.256 1147.008
+3:      95      tau 1.010889 1648.068 1250.756
+
+Median within-dataset r(b error, d error): 0.248 
+r across datasets between true and estimated person-level b-d correlation: 0.861 
+
+Signed error and n by zone:
+     zone     n signed_err below_ci above_ci
+   <fctr> <int>      <num>    <num>    <num>
+1:   < -4   820      0.627    0.013    0.162
+2: -4..-1  3265      0.645    0.015    0.099
+3:  -1..2  4301     -0.059    0.030    0.013
+4:    > 2  1614     -1.799    0.236    0.002

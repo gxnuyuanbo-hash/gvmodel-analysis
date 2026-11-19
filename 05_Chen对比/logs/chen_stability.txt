@@ -1,0 +1,3 @@
+median per-person reproduction rate over 100 simulated datasets: 0.915 | mean 0.901
+share of persons whose full-item estimate is one of the 2 extreme patterns (all items / no items): 0.471
+number of distinct full-item estimates per dataset: median 5.0

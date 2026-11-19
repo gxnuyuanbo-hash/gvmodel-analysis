@@ -1,0 +1,50 @@
+
+=== success rule: activated at any step ===
+distinct (r,d) estimates per dataset (centroid rule): median 12.0 | median tied combos per person 41.0
+median within-dataset correlation (NaN = estimate constant within dataset; n_nan shown):
+                median_r  n_nan
+r_chen~b_true     -0.139      0
+r_chen~d_true     -0.019      0
+d_chen~b_true     -0.067      0
+d_chen~d_true     -0.468      0
+r_cen~b_true      -0.133      0
+r_cen~d_true      -0.276      0
+d_cen~b_true      -0.136      0
+d_cen~d_true      -0.271      0
+r_first~b_true    -0.091      0
+r_first~d_true    -0.072      0
+d_first~b_true    -0.139      0
+d_first~d_true    -0.378      0
+acc~b_true        -0.024      0
+acc~d_true         0.718      0
+b_D~b_true         0.798      0
+b_D~d_true         0.051      0
+r_chen~acc         0.062      0
+d_chen~acc        -0.605      0
+r_cen~acc         -0.320      0
+d_cen~acc         -0.312      0
+
+=== success rule: activated at step 100 ===
+distinct (r,d) estimates per dataset (centroid rule): median 14.0 | median tied combos per person 1.0
+median within-dataset correlation (NaN = estimate constant within dataset; n_nan shown):
+                median_r  n_nan
+r_chen~b_true      0.017      0
+r_chen~d_true     -0.189      0
+d_chen~b_true      0.053      0
+d_chen~d_true     -0.403      0
+r_cen~b_true       0.026      0
+r_cen~d_true      -0.229      0
+d_cen~b_true       0.044      0
+d_cen~d_true      -0.345      0
+r_first~b_true     0.028      0
+r_first~d_true    -0.176      0
+d_first~b_true     0.069      0
+d_first~d_true    -0.353      0
+acc~b_true        -0.024      0
+acc~d_true         0.718      0
+b_D~b_true         0.798      0
+b_D~d_true         0.051      0
+r_chen~acc        -0.286      0
+d_chen~acc        -0.602      0
+r_cen~acc         -0.330      0
+d_cen~acc         -0.500      0

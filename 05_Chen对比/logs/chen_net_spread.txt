@@ -1,0 +1,24 @@
+Combos (of 441) in which a non-cue node is activated at any step; r = 1 or d = 1 give 41 combos with no spread,
+so 400 is the maximum possible for a target that is not a cue.
+weights                          dist       sim
+n                    median   800.000   800.000
+                     min      557.000   557.000
+                     max     1085.000  1085.000
+edges                median  2394.000  2394.000
+                     min     1665.000  1665.000
+                     max     3249.000  3249.000
+diameter             median     9.000    22.000
+                     min        6.000    16.000
+                     max       14.000    31.000
+median_combos        median    97.000    24.000
+                     min       27.500    13.000
+                     max      215.000    60.000
+min_combos           median     8.000     0.000
+                     min        0.000     0.000
+                     max       32.000     4.000
+share_targets_all400 median     0.019     0.022
+                     min        0.012     0.013
+                     max        0.038     0.033
+share_targets_le380  median     0.978     0.976
+                     min        0.921     0.962
+                     max        0.986     0.984

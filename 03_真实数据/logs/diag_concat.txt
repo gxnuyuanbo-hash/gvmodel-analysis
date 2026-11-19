@@ -1,0 +1,19 @@
+study subject  n  cue    share
+    1   S1_79 24   13 0.541667
+    2   S2_65 24    4 0.166667
+    2   S2_87 24    2 0.083333
+    2  S2_100 24    2 0.083333
+    2   S2_66 24    2 0.083333
+    1   S1_99 24    2 0.083333
+    1   S1_84 24    1 0.041667
+    2   S2_35 24    1 0.041667
+
+responses of top subject:                 problem   response
+EXTINGUISHER/TRUCK/CAMP  TRUCKCAMP
+      SURF/PADDLE/SKATE  SURFSKATE
+     FOOT/BASKET/VOLLEY  VOLEYBALL
+        JAY/MOCKING/FLU    BIRDFLU
+           DEW/COMB/BEE    DEWCOMB
+      LOSER/THROAT/SPOT     LARYNX
+       DUCK/FOLD/DOLLAR DOLLARFOLD
+      BEAT/RATE/DISEASE   BEATRATE

@@ -1,0 +1,2 @@
+max |diff| vs old (logit -5..5): 4.414133432639744e-05
+min activation -45.24319552757125

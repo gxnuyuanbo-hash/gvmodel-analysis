@@ -1,0 +1,4 @@
+Chen stability proportion (share of resamples returning the modal pair): median 0.915 | mean 0.904
+share returning the full-item pair: median 0.915 | solution diversity: median 2.0
+share of persons whose full-item estimate is one of the 2 extreme patterns (all items / no items): 0.436
+number of distinct full-item estimates per dataset: median 5.0
