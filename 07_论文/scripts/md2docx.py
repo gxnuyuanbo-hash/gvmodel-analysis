@@ -66,10 +66,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from equations import EQS, XSL, mathml
 from lxml import etree
 TO_OMML = etree.XSLT(etree.parse(XSL)) if XSL else None
-def equation(body):
-    p = doc.add_paragraph(); p.paragraph_format.first_line_indent = Inches(0)
+def equation(body, label):
+    # centered equation with its number flush right: <tab> equation <tab> (label)
+    W = TABLE_WIDTH[0]; p = doc.add_paragraph(); f = p.paragraph_format; f.first_line_indent = Inches(0)
+    f.tab_stops.add_tab_stop(Inches(W / 2), alignment=1); f.tab_stops.add_tab_stop(Inches(W), alignment=2)
+    p.add_run('\t')
     omath = TO_OMML(etree.fromstring(mathml(body))).getroot()
-    para_el = OxmlElement('m:oMathPara'); para_el.append(omath); p._p.append(para_el)
+    M = 'http://schemas.openxmlformats.org/officeDocument/2006/math'
+    for pr in omath.iter('{%s}naryPr' % M):            # limits above and below the sum, as in display style
+        if pr.find('{%s}limLoc' % M) is None:
+            e = etree.SubElement(pr, '{%s}limLoc' % M); e.set('{%s}val' % M, 'undOvr'); pr.insert(0, e)
+    p._p.append(omath); p.add_run(f'\t({label})')
     return p
 
 # ---------------------------------------------------------------- inline parser
@@ -194,8 +201,8 @@ def render(block_text, skip_first_heading=False):
         eq = next((k for k in EQS if re.match(k, l)), None)
         if eq:
             if TO_OMML is None: raise SystemExit('mathml2omml.xsl not found: install Microsoft Word or set XSL in equations.py')
-            equation(EQS[eq]); i += 1; continue
-        para(l, indent=not l.startswith('so that') and not l.startswith('where ') and not l.startswith('*a*_k(*t*) > 0') and not l.startswith('(**P**ᵀ)'))
+            equation(*EQS[eq]); i += 1; continue
+        para(l, indent=not l.startswith('so that') and not l.startswith('where ') and not l.startswith('*a*_k(*t*) > 0') and not l.startswith('(**P**ᵀ)') and not l.startswith('Here *vᵢ*'))
         for n in sorted(set(int(x) for x in re.findall(r'Figures? (\d)(?:[ab])?', l) + re.findall(r'Figures \d and (\d)', l))):
             if n not in placed and n in FIGS: figure(n); placed.add(n)
         i += 1
