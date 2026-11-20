@@ -38,9 +38,9 @@ ANON = '[link removed for anonymous review]'
 if MODE == 'main':
     opens = re.sub(r'https://github\.com/\S+?(?=[;.,]?(\s|$))', ANON, opens)
     opens = re.sub(r'https://doi\.org/10\.5281/zenodo\.\d+', ANON, opens)   # Zenodo records show the author
-    decl = re.sub(r'https://doi\.org/10\.5281/zenodo\.\d+', ANON, decl)
+    decl = re.sub(r' \(https://doi\.org/10\.5281/zenodo\.\d+\)', '', decl)   # DOI in parentheses after a masked link
     decl = re.sub(r'https://github\.com/\S+?(?=[;.,]?(\s|$))', ANON, decl)
-    decl = re.sub(r"(\*\*Authors' contributions\.\*\*).*", r'\1 [Removed for anonymous review; provided on the title page.]', decl)
+    decl = re.sub(r"(\*\*Authors' contributions\.\*\*).*", r'\1 [Removed for anonymous review and provided on the title page.]', decl)
 captions = {int(m.group(1)): (m.group(2).strip(), m.group(3).strip())
             for m in re.finditer(r'\*\*Figure (\d)\.\*\* \*(.+?)\*[ \t]*(.*)', caps)}
 
