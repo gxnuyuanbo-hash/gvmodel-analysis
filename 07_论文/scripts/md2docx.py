@@ -127,7 +127,7 @@ def add_inline(p, text, **extra):
 
 def para(text='', indent=True, align=None, keep=False, **extra):
     p = doc.add_paragraph(); p.paragraph_format.first_line_indent = Inches(.5) if indent else Inches(0)
-    if align: p.alignment = align
+    p.alignment = align if align is not None else WD_ALIGN_PARAGRAPH.JUSTIFY   # body text justified
     if keep: p.paragraph_format.keep_with_next = True
     if text: add_inline(p, text, **extra)
     return p
@@ -136,8 +136,8 @@ def page_break(): doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
 def heading(text, level):
     if level == 1: p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, keep=True, bold=True)
-    elif level == 2: p = para(text, indent=False, keep=True, bold=True)
-    else: p = para(text, indent=False, keep=True, bold=True, italic=True)
+    elif level == 2: p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True)
+    else: p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True, italic=True)
     return p
 
 def borders(cell, top=None, bottom=None):
@@ -151,7 +151,9 @@ def borders(cell, top=None, bottom=None):
 def table(lines):
     rows = [[c.strip() for c in l.strip().strip('|').split('|')] for l in lines if not re.match(r'^\|[-|\s]+\|$', l.strip())]
     t = doc.add_table(rows=len(rows), cols=len(rows[0])); t.alignment = WD_TABLE_ALIGNMENT.CENTER
-    t.autofit = False; nc = len(rows[0]); w0 = 1.15 if TABLE_WIDTH[0] < 7 else 1.6; ws = [w0] + [(TABLE_WIDTH[0] - w0) / (nc - 1)] * (nc - 1)
+    t.autofit = False; nc = len(rows[0])
+    longest = max(len(re.sub(r'[*_]', '', r[0])) for r in rows)          # first column as wide as its content needs
+    w0 = min(1.15 if TABLE_WIDTH[0] < 7 else 1.6, max(.5, .09 * longest + .15)); ws = [w0] + [(TABLE_WIDTH[0] - w0) / (nc - 1)] * (nc - 1)
     for j, w in enumerate(ws):
         for c in t.columns[j].cells: c.width = Inches(w)
     for i, row in enumerate(rows):
@@ -168,8 +170,8 @@ def table(lines):
 
 def figure(n):
     ttl, note = captions[n]
-    para(f'Figure {n}', indent=False, keep=True, bold=True)
-    para(ttl, indent=False, keep=True, italic=True)
+    para(f'Figure {n}', indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True)
+    para(ttl, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, italic=True)
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.keep_with_next = True
     p.add_run().add_picture(FIGS[n], width=Inches(6.5))
     p = para(indent=False); p.add_run('Note. ').italic = True; add_inline(p, note)
@@ -192,8 +194,8 @@ def render(block_text, skip_first_heading=False):
             table(tl); continue
         m = re.match(r'^\*\*Table (S?\d+[a-c]?)\*\*$', l)
         if m:
-            para(f'Table {m.group(1)}', indent=False, keep=True, bold=True)
-            para(lines[i + 1].strip().strip('*'), indent=False, keep=True, italic=True); i += 2; continue
+            para(f'Table {m.group(1)}', indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True)
+            para(lines[i + 1].strip().strip('*'), indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, italic=True); i += 2; continue
         if l.startswith('*Note.*'):
             p = para(indent=False); p.add_run('Note. ').italic = True; add_inline(p, l[len('*Note.*'):].strip()); i += 1; continue
         if re.match(r'^\d\. ', l):
@@ -221,7 +223,7 @@ if MODE == 'main':
     page_break(); heading('References', 1)
     for l in refs.split('\n')[1:]:
         if l.strip():
-            p = para(l.strip(), indent=False); p.paragraph_format.left_indent = Inches(.5); p.paragraph_format.first_line_indent = Inches(-.5)
+            p = para(l.strip(), indent=False, align=WD_ALIGN_PARAGRAPH.LEFT); p.paragraph_format.left_indent = Inches(.5); p.paragraph_format.first_line_indent = Inches(-.5)
     for n in sorted(set(FIGS) - placed): figure(n)
     print('figures placed after first citation:', sorted(placed))
 elif MODE == 'title':
@@ -246,8 +248,8 @@ elif MODE == 'supp':
     sm = open('supp/Supplementary_Material_en.md', encoding='utf-8').read().split('\n')
     from docx.enum.section import WD_ORIENT
     sec.orientation = WD_ORIENT.LANDSCAPE; sec.page_width, sec.page_height = Inches(11), Inches(8.5)
-    para('Supplementary Material', indent=False, bold=True)
-    para(sm[2].strip(), indent=False, italic=True)
+    para('Supplementary Material', indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, bold=True)
+    para(sm[2].strip(), indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, italic=True)
     TABLE_WIDTH[0] = 9.0
     render('\n'.join(sm[4:]))
 doc.save(OUT); print('saved', OUT, '(' + MODE + ')')
