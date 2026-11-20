@@ -4,7 +4,8 @@
 #                  References); repository links and author contributions are removed for review
 #   mode "title" : separate title page with author information and Author Note
 #   mode "supp"  : Supplementary Material (reads supp/Supplementary_Material_en.md; landscape)
-# Layout: US Letter, 1" margins, Times New Roman 12 pt, double spacing, page number top right (no running head);
+# Layout: US Letter, 1" margins, Times New Roman 12 pt, double spacing, page number bottom center (no running head);
+# display equations are native Word equations (OMML; see scripts/equations.py);
 # figures embedded after the paragraph that first cites them. Inline markup: **bold**, *italic*, x_sub / x_{sub},
 # x^sup / x^(sup) / x^{sup}.
 import re, sys
@@ -56,8 +57,20 @@ def field(run, code):
         if t: e = OxmlElement('w:fldChar'); e.set(qn('w:fldCharType'), t)
         else: e = OxmlElement('w:instrText'); e.set(qn('xml:space'), 'preserve'); e.text = txt
         run._r.append(e)
-hp = sec.header.paragraphs[0]; 
-hp.alignment = WD_ALIGN_PARAGRAPH.RIGHT; field(hp.add_run(), 'PAGE')   # page number only, no running head
+fp = sec.footer.paragraphs[0]
+fp.alignment = WD_ALIGN_PARAGRAPH.CENTER; field(fp.add_run(), 'PAGE')   # page number bottom center, no running head
+
+# ---------------------------------------------------------------- display equations (MathML -> OMML)
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from equations import EQS, XSL, mathml
+from lxml import etree
+TO_OMML = etree.XSLT(etree.parse(XSL)) if XSL else None
+def equation(body):
+    p = doc.add_paragraph(); p.paragraph_format.first_line_indent = Inches(0)
+    omath = TO_OMML(etree.fromstring(mathml(body))).getroot()
+    para_el = OxmlElement('m:oMathPara'); para_el.append(omath); p._p.append(para_el)
+    return p
 
 # ---------------------------------------------------------------- inline parser
 SUBRUN = r'[A-Za-z0-9Ͱ-Ͽ]+(?:,[A-Za-z0-9Ͱ-Ͽ]+)*'
@@ -178,8 +191,10 @@ def render(block_text, skip_first_heading=False):
             p = para(indent=False); p.add_run('Note. ').italic = True; add_inline(p, l[len('*Note.*'):].strip()); i += 1; continue
         if re.match(r'^\d\. ', l):
             p = para(l, indent=False); p.paragraph_format.left_indent = Inches(.5); p.paragraph_format.first_line_indent = Inches(-.25); i += 1; continue
-        if re.match(r'^(\*a\*_c\(θ\) =|\*\*[ab]\*\*\(\*t\* \+ 1\) =|\*\*M\*\*_\*r\*\^\*t\* =)', l):
-            para(l.rstrip(',.'), indent=False, align=WD_ALIGN_PARAGRAPH.CENTER); i += 1; continue
+        eq = next((k for k in EQS if re.match(k, l)), None)
+        if eq:
+            if TO_OMML is None: raise SystemExit('mathml2omml.xsl not found: install Microsoft Word or set XSL in equations.py')
+            equation(EQS[eq]); i += 1; continue
         para(l, indent=not l.startswith('so that') and not l.startswith('where ') and not l.startswith('*a*_k(*t*) > 0') and not l.startswith('(**P**ᵀ)'))
         for n in sorted(set(int(x) for x in re.findall(r'Figures? (\d)(?:[ab])?', l) + re.findall(r'Figures \d and (\d)', l))):
             if n not in placed and n in FIGS: figure(n); placed.add(n)
@@ -224,8 +239,8 @@ elif MODE == 'supp':
     sm = open('supp/Supplementary_Material_en.md', encoding='utf-8').read().split('\n')
     from docx.enum.section import WD_ORIENT
     sec.orientation = WD_ORIENT.LANDSCAPE; sec.page_width, sec.page_height = Inches(11), Inches(8.5)
-    para('Supplementary Material', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-    para(sm[2].strip(), indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, italic=True)
+    para('Supplementary Material', indent=False, bold=True)
+    para(sm[2].strip(), indent=False, italic=True)
     TABLE_WIDTH[0] = 9.0
     render('\n'.join(sm[4:]))
 doc.save(OUT); print('saved', OUT, '(' + MODE + ')')
