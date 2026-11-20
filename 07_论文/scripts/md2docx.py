@@ -212,6 +212,12 @@ def figure(n):
 
 # ---------------------------------------------------------------- render blocks
 placed = set()
+NUM = [False, 0, 0]                                       # numbered headings in the body: 1, 1.1, ...
+def numbered(text, lvl):
+    if not NUM[0]: return text
+    if lvl == 2: NUM[1] += 1; NUM[2] = 0; return f'{NUM[1]} {text}'
+    if lvl == 3: NUM[2] += 1; return f'{NUM[1]}.{NUM[2]} {text}'
+    return text
 def render(block_text, skip_first_heading=False):
     lines = block_text.split('\n'); i = 0; first = True
     while i < len(lines):
@@ -219,7 +225,7 @@ def render(block_text, skip_first_heading=False):
         if not l.strip(): i += 1; continue
         if l.startswith('#'):
             lvl = len(l) - len(l.lstrip('#'))
-            if not (skip_first_heading and first): heading(l.lstrip('# ').strip(), {2: 1, 3: 2}.get(lvl, 3))
+            if not (skip_first_heading and first): heading(numbered(l.lstrip('# ').strip(), lvl), {2: 1, 3: 2}.get(lvl, 3))
             first = False; i += 1; continue
         first = False
         if l.startswith('|'):
@@ -255,7 +261,7 @@ if MODE == 'main':
     p = para(); p.add_run('Keywords: ').italic = True; p.add_run(keywords)
     page_break()
     para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-    render(body)   # keeps the "Introduction" heading, as in published BRM articles
+    NUM[0] = True; render(body); NUM[0] = False   # numbered; keeps the "Introduction" heading, as in published BRM articles
     render(decl); render(opens)
     page_break(); heading('References', 1)
     for l in refs.split('\n')[1:]:
