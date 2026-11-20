@@ -1,5 +1,7 @@
 # Convert the manuscript markdown to APA 7 / Behavior Research Methods Word files.
 # Usage (from 07_论文/): python3 -I scripts/md2docx.py <manuscript.md> <out.docx> <mode>
+#   mode "full"  : manuscript for BRM (no blind review): title page, abstract, text, Declarations, Open Practices
+#                  Statement, References; nothing masked
 #   mode "main"  : anonymized manuscript (title and abstract on page 1, text, Declarations, Open Practices Statement,
 #                  References); repository links and author contributions are removed for review
 #   mode "title" : separate title page with author information and Author Note
@@ -268,7 +270,43 @@ def render(block_text, skip_first_heading=False):
             if n not in placed and n in FIGS: figure(n); placed.add(n)
         i += 1
 
-if MODE == 'main':
+def title_page(full_note=True):
+    # author details live in title_info.json (git-ignored): {"affiliation", "orcid", "address", "phone", "email"}
+    import json, os
+    TI = {'affiliation': '[Affiliation]', 'orcid': '[ORCID iD]', 'address': '[postal address]', 'phone': '[telephone]', 'email': '[email]'}
+    if os.path.exists('title_info.json'): TI.update(json.load(open('title_info.json', encoding='utf-8')))
+    for _ in range(3): para(indent=False)
+    para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+    para(indent=False)
+    para('Bo Yuan', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER)
+    para(TI['affiliation'], indent=False, align=WD_ALIGN_PARAGRAPH.CENTER)
+    for _ in range(3): para(indent=False)
+    para('Author Note', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+    para('Bo Yuan ' + TI['orcid'])
+    para('No funding was received for conducting this study. The author has no relevant financial or non-financial interests to disclose.')
+    if full_note:                                           # separate title page: also CRediT and open practices
+        contrib = re.search(r"\*\*Authors' contributions\.\*\*\s*(.+)", decl).group(1).strip()
+        para('CRediT author statement. ' + contrib)
+        para(re.sub(r'^## Open Practices Statement\s*', '', opens).strip())
+    para('Correspondence concerning this article should be addressed to Bo Yuan, ' + TI['address'] + '. Telephone: ' + TI['phone'] + '. Email: ' + TI['email'])   # BRM: address, telephone, email
+
+if MODE == 'full':
+    # BRM does not use blind review: one manuscript file with the title page first, nothing masked
+    title_page(full_note=False); page_break()
+    para('Abstract', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+    para(abstract, indent=False)
+    p = para(); p.add_run('Keywords: ').italic = True; p.add_run(keywords)
+    page_break()
+    para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+    render(body)
+    render(decl); render(opens)
+    page_break(); heading('References', 1)
+    for l in refs.split('\n')[1:]:
+        if l.strip():
+            p = para(l.strip(), indent=False, align=WD_ALIGN_PARAGRAPH.LEFT); p.paragraph_format.left_indent = Inches(.5); p.paragraph_format.first_line_indent = Inches(-.5)
+    for n in sorted(set(FIGS) - placed): figure(n)
+    print('figures placed after first citation:', sorted(placed))
+elif MODE == 'main':
     para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)   # title and abstract on page 1
     para(indent=False)
     para('Abstract', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
@@ -285,23 +323,7 @@ if MODE == 'main':
     for n in sorted(set(FIGS) - placed): figure(n)
     print('figures placed after first citation:', sorted(placed))
 elif MODE == 'title':
-    # author details live in title_info.json (git-ignored): {"affiliation", "orcid", "address", "phone", "email"}
-    import json, os
-    TI = {'affiliation': '[Affiliation]', 'orcid': '[ORCID iD]', 'address': '[postal address]', 'phone': '[telephone]', 'email': '[email]'}
-    if os.path.exists('title_info.json'): TI.update(json.load(open('title_info.json', encoding='utf-8')))
-    for _ in range(3): para(indent=False)
-    para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-    para(indent=False)
-    para('Bo Yuan', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER)
-    para(TI['affiliation'], indent=False, align=WD_ALIGN_PARAGRAPH.CENTER)
-    for _ in range(3): para(indent=False)
-    para('Author Note', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-    para('Bo Yuan ' + TI['orcid'])
-    para('No funding was received for conducting this study. The author has no relevant financial or non-financial interests to disclose.')
-    contrib = re.search(r"\*\*Authors' contributions\.\*\*\s*(.+)", decl).group(1).strip()
-    para('CRediT author statement. ' + contrib)
-    para(re.sub(r'^## Open Practices Statement\s*', '', opens).strip())
-    para('Correspondence concerning this article should be addressed to Bo Yuan, ' + TI['address'] + '. Telephone: ' + TI['phone'] + '. Email: ' + TI['email'])   # BRM: address, telephone, email
+    title_page(full_note=True)
 elif MODE == 'supp':
     # layout follows a plain supplementary file: portrait, single spacing (1.15, 10 pt after), no page numbers,
     # centered title, then "Section S1." and "Table S1." blocks with bold left-aligned titles
