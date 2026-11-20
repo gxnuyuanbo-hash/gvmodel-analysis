@@ -1,0 +1,8 @@
+{
+  "title": "Analysis code for \"Estimating spreading-activation breadth and verification ability from remote associates responses: A generation-verification model\"",
+  "upload_type": "software",
+  "creators": [{"name": "Yuan, Bo"}],
+  "description": "Analysis code, simulation design, seeds, and summary results for the article. Data, networks, fitted models, and raw simulation output are not included; the README lists their sources and the scripts that regenerate them.",
+  "license": "MIT",
+  "keywords": ["spreading activation", "remote associates test", "generation-verification model", "parameter recovery", "simulation"]
+}
