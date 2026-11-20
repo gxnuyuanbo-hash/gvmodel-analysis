@@ -255,7 +255,7 @@ if MODE == 'main':
     p = para(); p.add_run('Keywords: ').italic = True; p.add_run(keywords)
     page_break()
     para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-    render(body, skip_first_heading=True)
+    render(body)   # keeps the "Introduction" heading, as in published BRM articles
     render(decl); render(opens)
     page_break(); heading('References', 1)
     for l in refs.split('\n')[1:]:
