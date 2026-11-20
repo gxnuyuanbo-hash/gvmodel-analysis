@@ -4,7 +4,7 @@
 #                  References); repository links and author contributions are removed for review
 #   mode "title" : separate title page with author information and Author Note
 #   mode "supp"  : Supplementary Material (reads supp/Supplementary_Material_en.md; landscape)
-# Layout: US Letter, 1" margins, Times New Roman 12 pt, double spacing, page number bottom center (no running head);
+# Layout: US Letter, 1" margins, Times New Roman 12 pt, double spacing, page number upper right (no running head);
 # display equations are native Word equations (OMML; see scripts/equations.py);
 # figures embedded after the paragraph that first cites them. Inline markup: **bold**, *italic*, x_sub / x_{sub},
 # x^sup / x^(sup) / x^{sup}.
@@ -57,8 +57,8 @@ def field(run, code):
         if t: e = OxmlElement('w:fldChar'); e.set(qn('w:fldCharType'), t)
         else: e = OxmlElement('w:instrText'); e.set(qn('xml:space'), 'preserve'); e.text = txt
         run._r.append(e)
-fp = sec.footer.paragraphs[0]
-fp.alignment = WD_ALIGN_PARAGRAPH.CENTER; field(fp.add_run(), 'PAGE')   # page number bottom center, no running head
+fp = sec.header.paragraphs[0]
+fp.alignment = WD_ALIGN_PARAGRAPH.RIGHT; field(fp.add_run(), 'PAGE')   # BRM: page number upper right, no running head
 
 # ---------------------------------------------------------------- display equations (MathML -> OMML)
 import os
@@ -271,7 +271,7 @@ if MODE == 'main':
     p = para(); p.add_run('Keywords: ').italic = True; p.add_run(keywords)
     page_break()
     para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-    NUM[0] = True; render(body); NUM[0] = False   # numbered; keeps the "Introduction" heading, as in published BRM articles
+    render(body)   # APA: unnumbered headings; keeps the "Introduction" heading, as in published BRM articles
     render(decl); render(opens)
     page_break(); heading('References', 1)
     for l in refs.split('\n')[1:]:
@@ -280,9 +280,9 @@ if MODE == 'main':
     for n in sorted(set(FIGS) - placed): figure(n)
     print('figures placed after first citation:', sorted(placed))
 elif MODE == 'title':
-    # author details live in title_info.json (git-ignored): {"affiliation", "orcid", "address", "email"}
+    # author details live in title_info.json (git-ignored): {"affiliation", "orcid", "address", "phone", "email"}
     import json, os
-    TI = {'affiliation': '[Affiliation]', 'orcid': '[ORCID iD]', 'address': '[postal address]', 'email': '[email]'}
+    TI = {'affiliation': '[Affiliation]', 'orcid': '[ORCID iD]', 'address': '[postal address]', 'phone': '[telephone]', 'email': '[email]'}
     if os.path.exists('title_info.json'): TI.update(json.load(open('title_info.json', encoding='utf-8')))
     for _ in range(3): para(indent=False)
     para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
@@ -296,12 +296,12 @@ elif MODE == 'title':
     contrib = re.search(r"\*\*Authors' contributions\.\*\*\s*(.+)", decl).group(1).strip()
     para('CRediT author statement. ' + contrib)
     para(re.sub(r'^## Open Practices Statement\s*', '', opens).strip())
-    para('Correspondence concerning this article should be addressed to Bo Yuan, ' + TI['address'] + '. Email: ' + TI['email'])
+    para('Correspondence concerning this article should be addressed to Bo Yuan, ' + TI['address'] + '. Telephone: ' + TI['phone'] + '. Email: ' + TI['email'])   # BRM: address, telephone, email
 elif MODE == 'supp':
     # layout follows a plain supplementary file: portrait, single spacing (1.15, 10 pt after), no page numbers,
     # centered title, then the proofs and "Table S1." blocks with bold left-aligned titles
     sm = open('supp/Supplementary_Material_en.md', encoding='utf-8').read().split('\n')
-    fp._p.getparent().remove(fp._p); sec.footer.add_paragraph()           # no page number
+    fp._p.getparent().remove(fp._p); sec.header.add_paragraph()           # no page number
     pf.line_spacing = 1.15; pf.space_after = Pt(10)
     SUPP_LEFT[0] = True
     p = para('Supplementary Material', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
