@@ -17,7 +17,7 @@ code, verification ability is written `d` (in the article, *v*).
 |---|---|---|
 | Beucler & De Neys (2026), osf.io/gfsb8 (LGPL-3.0) | empirical illustration | `python3 -I 01_数据/_scripts/osf_dl.py <OSF API url> 01_数据/gfsb8` or download from OSF into `01_数据/gfsb8/` |
 | SWOW-EN18 R123 strengths (De Deyne et al., 2019; CC BY-NC-ND, not redistributable) | semantic network | download `strength.SWOW-EN.R123.20180827.csv` from smallworldofwords.org into `01_数据/SWOW-EN18/unzipped/` |
-| Chen et al. (2026), osf.io/ex9mb | Chen et al.'s item networks (Section "Consequences on Real Networks", Simulation 2) | unzip `SemanticDistance_CorrelationMatrix.zip` into `01_数据/Chen2026_网络/unzipped/` (scripts read `path_wu/wu_<k>.xlsx`) and put `RawData_ModifiedFreeAssociationTask.xlsx` into `01_数据/Chen2026_自由联想/` |
+| Chen et al. (2026), private OSF project with a view-only link given in their article: https://osf.io/ex9mb/?view_only=9c8d55707db04d1f862cf8be51b9ebb4 | Chen et al.'s item networks (Section "Consequences on Real Networks", Simulation 2) | unzip `SemanticDistance_CorrelationMatrix.zip` into `01_数据/Chen2026_网络/unzipped/` (scripts read `path_wu/wu_<k>.xlsx`) and put `RawData_ModifiedFreeAssociationTask.xlsx` into `01_数据/Chen2026_自由联想/` |
 | Chen, Xu, & Chen (2024), appendix | CWRAT cues and solutions | not redistributed; `05_Chen对比/chen_key.py` parses the item table from the article |
 
 ## Structure and order of execution
