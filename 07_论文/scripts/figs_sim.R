@@ -2,10 +2,10 @@
 # Fig 1  key cell: true breadth vs generation-verification model posterior mean, Chen r, Chen d (random 3,000 careful persons, fixed seed)
 # Fig 2  person breadth recovery (median within-dataset r) across the 18 s1 cells: generation-verification model vs grid matching r and d
 # Labels: methods are named by what they do (generation-verification model / grid matching), not by author or letter; Times New Roman throughout.
-# Fig 3  SBC: ECDF difference of ranks, 13 quantities, 95% simultaneous band for discrete uniform ranks by simulation
+# Fig 4  SBC: ECDF difference of ranks, 13 quantities, 95% simultaneous band for discrete uniform ranks by simulation
 #        (Säilynoja, Bürkner & Vehtari, 2022, Stat Comput 32:32; implemented here because the SBC/bayesplot packages are not installed)
 # Colours: Apple system palette, blue #007AFF (generation-verification model / careful), red #FF3B30 (Chen / careless), grey #8E8E93, light grey #E5E5EA.
-# Fig 4  (a) key cell: posterior mean minus truth by true breadth, with 90% coverage; (b) s3: posterior breadth of careless vs careful
+# Fig 3  (a) key cell: posterior mean minus truth by true breadth, with 90% coverage; (b) s3: posterior breadth of careless vs careful
 suppressMessages({library(data.table); library(ggplot2); library(patchwork)})
 qpdf <- function(filename, width, height, ...) grDevices::quartz(type = "pdf", file = filename, width = width, height = height)
 qpng <- function(filename, width, height, ...) grDevices::quartz(type = "png", file = filename, width = width, height = height, dpi = 200, bg = "white")
@@ -49,7 +49,7 @@ p2 <- ggplot(f2, aes(sigma, r, colour = method, shape = N, group = interaction(m
   labs(x = "Population SD of breadth (\u03c3)", y = "Correlation with true breadth\n(median over datasets)", colour = NULL, shape = NULL) + th
 save(p2, "fig2_recovery_by_cell", 6.5, 3)
 
-# ---- Fig 3
+# ---- Fig 4 (SBC)
 rk <- rd("out/sbc/c00/ranks_*.csv"); L <- rk$L[1]; nS <- rk[, .N, by = variable]$N[1]; zz <- (1:L) / (L + 1)
 # ECDF of ranks (0..L) at z_i = i/(L+1): share of ranks < i. Band: Säilynoja et al. (2022) simulation method, 5,000 null samples.
 set.seed(1804); gam <- replicate(5000, { cnt <- cumsum(tabulate(sample.int(L + 1, nS, TRUE), L + 1))[1:L]
@@ -63,9 +63,9 @@ p3 <- ggplot(e, aes(u, d)) + geom_ribbon(data = band, aes(u, ymin = lo, ymax = h
   geom_hline(yintercept = 0, colour = GREY, linewidth = .3) + geom_line(colour = BLUE, linewidth = .45) +
   facet_wrap(~variable, nrow = 2, labeller = label_parsed) + scale_x_continuous(breaks = c(0, .5, 1), labels = c("0", ".5", "1")) + scale_y_continuous(labels = cor_lab) +
   labs(x = "Fractional rank", y = "ECDF difference") + th + theme(strip.text = element_text(face = "plain"))
-save(p3, "fig3_sbc", 7.2, 3)
+save(p3, "fig4_sbc", 7.2, 3)
 
-# ---- Fig 4
+# ---- Fig 3 (shrinkage, careless)
 m[, bin := cut(b_true, seq(-10, 8, 1))]
 z <- m[, .(x = mean(b_true), bias = mean(b_mean - b_true), lo = quantile(b_mean - b_true, .05), hi = quantile(b_mean - b_true, .95),
             cover = mean(b_true >= b_q5 & b_true <= b_q95), n = .N), by = bin][n >= 200][order(x)]
@@ -78,5 +78,5 @@ p3d[, grp := factor(ifelse(careless, ifelse(careless_type == "random", "Random r
 p3d[, cond := factor(sprintf("%s %d%%", careless_type, round(100 * prop)), c("random 5%", "random 10%", "giveup 5%", "giveup 10%"), c("Random 5%", "Random 10%", "Give-up 5%", "Give-up 10%"))]
 p4b <- ggplot(p3d, aes(b_mean, colour = grp, linetype = grp)) + geom_density(adjust = 1.2, key_glyph = "path") + facet_wrap(~cond, nrow = 1) + scale_x_continuous(labels = num_lab) + scale_y_continuous(labels = cor_lab) + scale_colour_manual(values = c(BLUE, RED, RED)) + scale_linetype_manual(values = c("solid", "solid", "22")) +
   labs(x = "Posterior mean breadth", y = "Density", colour = NULL, linetype = NULL, title = "b  Simulation 3 (careless responders)") + th + theme(legend.position = "bottom")
-save(p4a / p4b + plot_layout(heights = c(1, 1.1)), "fig4_shrinkage_careless", 7.2, 5.2)
+save(p4a / p4b + plot_layout(heights = c(1, 1.1)), "fig3_shrinkage_careless", 7.2, 5.2)
 cat("figures written to", normalizePath(od), "\n")
