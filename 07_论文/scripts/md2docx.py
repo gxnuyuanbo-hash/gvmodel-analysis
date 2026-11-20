@@ -152,11 +152,11 @@ def tokens(text, base=None):
         buf += c; i += 1
     flush(); return out
 
-URL_RE = re.compile(r'https?://[^\s)\]]+?(?=[.,;:]?(?:\s|$|\)|\]))')
+URL_RE = re.compile(r'https?://[^\s)\]]+?(?=[.,;:]?(?:\s|$|\)|\]))|[\w.+-]+@[\w-]+(?:\.[\w-]+)+(?<!\.)')   # web addresses, DOIs, e-mail
 LINK_BLUE = '0070C0'                                            # Word standard colour "Blue"
-def add_link(p, url, size=None):
+def add_link(p, url, size=None, target=None):
     from docx.opc.constants import RELATIONSHIP_TYPE as RT
-    rid = p.part.relate_to(url, RT.HYPERLINK, is_external=True)
+    rid = p.part.relate_to(target or url, RT.HYPERLINK, is_external=True)
     h = OxmlElement('w:hyperlink'); h.set(qn('r:id'), rid)
     r = OxmlElement('w:r'); rpr = OxmlElement('w:rPr')
     c = OxmlElement('w:color'); c.set(qn('w:val'), LINK_BLUE); rpr.append(c)
@@ -170,7 +170,8 @@ def add_inline(p, text, **extra):
     text = re.sub(r' ([=<>≤≥∈~]) ', '\u00a0\\1\u00a0', text)   # keep relations with their operands
     pos = 0
     for m in URL_RE.finditer(text):                          # web addresses and DOIs become live links
-        _add_runs(p, text[pos:m.start()], **extra); add_link(p, m.group(0)); pos = m.end()
+        u = m.group(0); _add_runs(p, text[pos:m.start()], **extra)
+        add_link(p, u, target=None if u.startswith('http') else 'mailto:' + u); pos = m.end()
     _add_runs(p, text[pos:], **extra)
     return p
 
