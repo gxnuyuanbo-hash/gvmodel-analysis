@@ -1,6 +1,6 @@
 # Convert the manuscript markdown to APA 7 / Behavior Research Methods Word files.
 # Usage (from 07_论文/): python3 -I scripts/md2docx.py <manuscript.md> <out.docx> <mode>
-#   mode "main"  : anonymized manuscript (masked title page, abstract, text, Declarations, Open Practices Statement,
+#   mode "main"  : anonymized manuscript (title and abstract on page 1, text, Declarations, Open Practices Statement,
 #                  References); repository links and author contributions are removed for review
 #   mode "title" : separate title page with author information and Author Note
 #   mode "supp"  : Supplementary Material (reads supp/Supplementary_Material_en.md; landscape)
@@ -66,18 +66,45 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from equations import EQS, XSL, mathml
 from lxml import etree
 TO_OMML = etree.XSLT(etree.parse(XSL)) if XSL else None
+M = 'http://schemas.openxmlformats.org/officeDocument/2006/math'
+def mel(tag, **attrs):
+    e = etree.SubElement(etree.Element('dummy'), '{%s}%s' % (M, tag))
+    for k, v in attrs.items(): e.set('{%s}%s' % (M, k), v)
+    return e
+def mrun(text):
+    r = mel('r'); t = etree.SubElement(r, '{%s}t' % M); t.text = text; return r
 def equation(body, label):
-    # centered equation with its number flush right: <tab> equation <tab> (label)
-    W = TABLE_WIDTH[0]; p = doc.add_paragraph(); f = p.paragraph_format; f.first_line_indent = Inches(0)
-    f.tab_stops.add_tab_stop(Inches(W / 2), alignment=1); f.tab_stops.add_tab_stop(Inches(W), alignment=2)
-    p.add_run('\t')
+    # Word's native numbered display equation: oMathPara > oMath > eqArr > e[equation # (label)]
+    p = doc.add_paragraph(); p.paragraph_format.first_line_indent = Inches(0)
     omath = TO_OMML(etree.fromstring(mathml(body))).getroot()
-    M = 'http://schemas.openxmlformats.org/officeDocument/2006/math'
-    for pr in omath.iter('{%s}naryPr' % M):            # limits above and below the sum, as in display style
+    if etree.QName(omath).localname == 'oMathPara': omath = omath.find('{%s}oMath' % M)   # the XSL wraps block math
+    for pr in omath.iter('{%s}naryPr' % M):            # limits above and below the sum (limLoc follows chr)
         if pr.find('{%s}limLoc' % M) is None:
-            e = etree.SubElement(pr, '{%s}limLoc' % M); e.set('{%s}val' % M, 'undOvr'); pr.insert(0, e)
-    p._p.append(omath); p.add_run(f'\t({label})')
+            pos = 1 if len(pr) and pr[0].tag == '{%s}chr' % M else 0; pr.insert(pos, mel('limLoc', val='undOvr'))
+    if label:
+        e = mel('e')
+        for ch in list(omath): e.append(ch)
+        e.append(mrun('#')); e.append(mrun('(' + label + ')'))
+        arr = mel('eqArr'); arr.append(e); omath.append(arr)
+    mp = mel('oMathPara'); mp.append(omath); p._p.append(mp)
     return p
+# math font that matches Times New Roman (falls back to Cambria Math where STIX Two Math is not installed)
+_set = doc.settings.element
+mpr = _set.find('{%s}mathPr' % M)                       # the default template already has one: set its font
+if mpr is not None:
+    mf = mpr.find('{%s}mathFont' % M)
+    if mf is None: mf = mel('mathFont'); mpr.insert(0, mf)
+    mf.set('{%s}val' % M, 'STIX Two Math')
+z = _set.find(qn('w:zoom'))
+if z is not None and z.get(qn('w:percent')) is None: z.set(qn('w:percent'), '100')
+AFTER_MATHPR = ['attachedSchema', 'themeFontLang', 'clrSchemeMapping', 'doNotIncludeSubdocsInStats', 'doNotAutoCompressPictures',
+                'forceUpgrade', 'captions', 'readModeInkLockDown', 'smartTagType', 'schemaLibrary', 'shapeDefaults',
+                'doNotEmbedSmartTags', 'decimalSymbol', 'listSeparator']
+if mpr is None:
+    mpr = mel('mathPr'); mpr.append(mel('mathFont', val='STIX Two Math'))
+    _nxt = next((c for c in _set if etree.QName(c).localname in AFTER_MATHPR), None)
+    if _nxt is not None: _nxt.addprevious(mpr)
+    else: _set.append(mpr)
 
 # ---------------------------------------------------------------- inline parser
 SUBRUN = r'[A-Za-z0-9Ͱ-Ͽ]+(?:,[A-Za-z0-9Ͱ-Ͽ]+)*'
@@ -119,6 +146,7 @@ def tokens(text, base=None):
     flush(); return out
 
 def add_inline(p, text, **extra):
+    text = re.sub(r' ([=<>≤≥∈~]) ', '\u00a0\\1\u00a0', text)   # keep relations with their operands
     for t, f in tokens(text):
         r = p.add_run(t); r.bold = f['bold'] or extra.get('bold'); r.italic = f['italic'] or extra.get('italic')
         if f['sub']: r.font.subscript = True
@@ -134,15 +162,19 @@ def para(text='', indent=True, align=None, keep=False, **extra):
 
 def page_break(): doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
+SUPP_LEFT = [False]
 def heading(text, level):
-    if level == 1: p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, keep=True, bold=True)
+    if level == 1 and SUPP_LEFT[0]:
+        p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True)
+        p.paragraph_format.space_before = Pt(18); p.paragraph_format.space_after = Pt(4)
+    elif level == 1: p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, keep=True, bold=True)
     elif level == 2: p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True)
     else: p = para(text, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True, italic=True)
     return p
 
 def borders(cell, top=None, bottom=None):
     tcPr = cell._tc.get_or_add_tcPr(); b = OxmlElement('w:tcBorders')
-    for side, val in (('top', top), ('bottom', bottom), ('left', None), ('right', None)):
+    for side, val in (('top', top), ('left', None), ('bottom', bottom), ('right', None)):   # schema order
         e = OxmlElement(f'w:{side}'); e.set(qn('w:val'), 'single' if val else 'nil')
         if val: e.set(qn('w:sz'), str(val)); e.set(qn('w:color'), '000000')
         b.append(e)
@@ -165,7 +197,9 @@ def table(lines):
             if m:
                 add_inline(p, m.group(1)); p.add_run().add_break(); add_inline(p, m.group(2))
             else: add_inline(p, val)
-            for r in p.runs: r.font.size = Pt(10)
+            for r in p.runs:
+                r.font.size = Pt(10 if nc < 12 else 8)
+                if i == 0 and SUPP_LEFT[0]: r.bold = True
             borders(c, top=8 if i in (0, 1) else None, bottom=8 if i == len(rows) - 1 else None)
 
 def figure(n):
@@ -192,6 +226,10 @@ def render(block_text, skip_first_heading=False):
             tl = []
             while i < len(lines) and lines[i].startswith('|'): tl.append(lines[i]); i += 1
             table(tl); continue
+        m = re.match(r'^\*\*(Table S\d+\.) (.+)\*\*$', l)          # supplement: "Table S1. Title" on one line
+        if m:
+            p = para(indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True); p.paragraph_format.space_before = Pt(18)
+            p.paragraph_format.space_after = Pt(4); add_inline(p, m.group(1) + ' ' + m.group(2), bold=True); i += 1; continue
         m = re.match(r'^\*\*Table (S?\d+[a-c]?)\*\*$', l)
         if m:
             para(f'Table {m.group(1)}', indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, bold=True)
@@ -204,15 +242,14 @@ def render(block_text, skip_first_heading=False):
         if eq:
             if TO_OMML is None: raise SystemExit('mathml2omml.xsl not found: install Microsoft Word or set XSL in equations.py')
             equation(*EQS[eq]); i += 1; continue
-        para(l, indent=not l.startswith('so that') and not l.startswith('where ') and not l.startswith('*a*_k(*t*) > 0') and not l.startswith('(**P**ᵀ)') and not l.startswith('Here *vᵢ*'))
+        para(l, indent=not SUPP_LEFT[0] and not l.startswith('so that') and not l.startswith('where ') and not l.startswith('*a*_k(*t*) > 0') and not l.startswith('(**P**ᵀ)') and not l.startswith('Here *vᵢ*'))
         for n in sorted(set(int(x) for x in re.findall(r'Figures? (\d)(?:[ab])?', l) + re.findall(r'Figures \d and (\d)', l))):
             if n not in placed and n in FIGS: figure(n); placed.add(n)
         i += 1
 
 if MODE == 'main':
-    for _ in range(3): para(indent=False)
-    para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
-    page_break()
+    para(title, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)   # title and abstract on page 1
+    para(indent=False)
     para('Abstract', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
     para(abstract, indent=False)
     p = para(); p.add_run('Keywords: ').italic = True; p.add_run(keywords)
@@ -245,11 +282,16 @@ elif MODE == 'title':
     para(re.sub(r'^## Open Practices Statement\s*', '', opens).strip())
     para('Correspondence concerning this article should be addressed to Bo Yuan, ' + TI['address'] + '. Email: ' + TI['email'])
 elif MODE == 'supp':
+    # layout follows a plain supplementary file: portrait, single spacing (1.15, 10 pt after), no page numbers,
+    # centered title, then the proofs and "Table S1." blocks with bold left-aligned titles
     sm = open('supp/Supplementary_Material_en.md', encoding='utf-8').read().split('\n')
-    from docx.enum.section import WD_ORIENT
-    sec.orientation = WD_ORIENT.LANDSCAPE; sec.page_width, sec.page_height = Inches(11), Inches(8.5)
-    para('Supplementary Material', indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, bold=True)
-    para(sm[2].strip(), indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, italic=True)
-    TABLE_WIDTH[0] = 9.0
+    fp._p.getparent().remove(fp._p); sec.footer.add_paragraph()           # no page number
+    pf.line_spacing = 1.15; pf.space_after = Pt(10)
+    SUPP_LEFT[0] = True
+    p = para('Supplementary Material', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+    for r in p.runs: r.font.size = Pt(16)
+    p = para(sm[2].strip(), indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
+    for r in p.runs: r.font.size = Pt(16)
+    para(indent=False, align=WD_ALIGN_PARAGRAPH.CENTER)
     render('\n'.join(sm[4:]))
 doc.save(OUT); print('saved', OUT, '(' + MODE + ')')

@@ -1,6 +1,7 @@
 # Display equations as MathML, converted to native Word equations (OMML) by md2docx.py with the
 # mathml2omml.xsl stylesheet that ships with Microsoft Word. Each key is a regex matched against the start of
-# the markdown line that holds the equation; the value is (MathML body, equation number). The markdown keeps a
+# the markdown line that holds the equation; the value is (MathML body, equation number or None for an
+# unnumbered equation). The markdown keeps a
 # plain-text version for reading.
 # Conventions (APA 7): variables italic, vectors and matrices bold upright, Greek letters and operators upright.
 import os
@@ -62,19 +63,19 @@ EQS = {
         B('a'), paren(i('t'), o('+'), n('1')), o('='), sub(i('T'), g('ε')),
         brack(ONE_MINUS(i('d')), sub(B('M'), i('r')), B('a'), paren(i('t'))), o(','),
         text('\u2003with\u2003'),
-        sub(B('M'), i('r')), o('='), i('r'), B('I'), o('+'), ONE_MINUS(i('r')), PT, o(',')), 'S1.1'),
+        sub(B('M'), i('r')), o('='), i('r'), B('I'), o('+'), ONE_MINUS(i('r')), PT, o(',')), None),
     # Supplementary Material S1, Property 2
     r'^\*\*b\*\*\(\*t\* \+ 1\) =': (r(
         B('b'), paren(i('t'), o('+'), n('1')), o('='), sub(i('T'), sub(g('ε'), i('t'))),
         paren(sub(B('M'), i('r')), B('b'), paren(i('t'))), o(','), gap(),
         sub(g('ε'), i('t')), o('='),
         frac(r(g('ε'), o('/'), i('A')), sup(ONE_MINUS(i('d')), r(i('t'), o('+'), n('1')))), o(','), gap(),
-        B('b'), paren(n('0')), o('='), sub(B('e'), i('C')), o('.')), 'S1.2'),
+        B('b'), paren(n('0')), o('='), sub(B('e'), i('C')), o('.')), None),
     # Supplementary Material S1, Property 3
     r'^\*\*M\*\*_\*r\*\^\*t\* =': (r(
         subsup(B('M'), i('r'), i('t')), o('='), sumover(r(i('k'), o('='), n('0')), i('t')),
         r(o('('), '<mfrac linethickness="0">' + i('t') + i('k') + '</mfrac>', o(')')),
-        sup(ONE_MINUS(i('r')), i('k')), sup(i('r'), r(i('t'), o('−'), i('k'))), sup(paren(PT), i('k')), o('.')), 'S1.3'),
+        sup(ONE_MINUS(i('r')), i('k')), sup(i('r'), r(i('t'), o('−'), i('k'))), sup(paren(PT), i('k')), o('.')), None),
 }
 
 def mathml(body):
