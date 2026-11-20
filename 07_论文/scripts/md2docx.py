@@ -299,7 +299,7 @@ elif MODE == 'title':
     para('Correspondence concerning this article should be addressed to Bo Yuan, ' + TI['address'] + '. Telephone: ' + TI['phone'] + '. Email: ' + TI['email'])   # BRM: address, telephone, email
 elif MODE == 'supp':
     # layout follows a plain supplementary file: portrait, single spacing (1.15, 10 pt after), no page numbers,
-    # centered title, then the proofs and "Table S1." blocks with bold left-aligned titles
+    # centered title, then "Section S1." and "Table S1." blocks with bold left-aligned titles
     sm = open('supp/Supplementary_Material_en.md', encoding='utf-8').read().split('\n')
     fp._p.getparent().remove(fp._p); sec.header.add_paragraph()           # no page number
     pf.line_spacing = 1.15; pf.space_after = Pt(10)

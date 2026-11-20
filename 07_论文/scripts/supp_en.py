@@ -1,6 +1,6 @@
 # Build the English Supplementary Material (markdown) from supp/S1_proofs_en.md and the CSV tables written by
 # tables_supp.R. Usage (from 07_论文/): python3 -I scripts/supp_en.py   Output: supp/Supplementary_Material_en.md
-# Proofs (unnumbered section): the three properties of spreadr grid matching; Tables S1–S3: Simulation 3 (careless
+# Section S1: proofs of the three properties of spreadr grid matching; Tables S1–S3: Simulation 3 (careless
 # responders; supp/S2*.csv); Tables S4–S6: Simulation 1, all 18 cells (supp/S3*.csv).
 import csv
 C = {'随机作答 5%': 'Random 5%', '随机作答 10%': 'Random 10%', '放弃作答 5%': 'Give-up 5%', '放弃作答 10%': 'Give-up 10%',
