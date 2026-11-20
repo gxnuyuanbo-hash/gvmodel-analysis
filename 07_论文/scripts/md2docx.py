@@ -309,8 +309,8 @@ def title_page(full_note=True):
     TI = {'affiliation': '[Affiliation]', 'orcid': '[ORCID iD]', 'address': '[postal address]', 'phone': '[telephone]', 'email': '[email]'}
     if os.path.exists('title_info.json'): TI.update(json.load(open('title_info.json', encoding='utf-8')))
     L = WD_ALIGN_PARAGRAPH.LEFT; C = WD_ALIGN_PARAGRAPH.CENTER
-    for _ in range(3): para(indent=False)
-    para(title, indent=False, align=C, bold=True)
+    p = para(title, indent=False, align=C, bold=True)          # user's layout: title at the top, 16 pt
+    for r in p.runs: r.font.size = Pt(16)
     para(indent=False)
     para('Bo Yuan', indent=False, align=C)
     para(TI['address'], indent=False, align=C)
