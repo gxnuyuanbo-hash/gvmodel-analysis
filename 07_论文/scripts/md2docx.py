@@ -292,9 +292,9 @@ def render(block_text, skip_first_heading=False):
         i += 1
 
 def title_page(full_note=True):
-    # author details live in title_info.json (git-ignored): {"affiliation", "orcid", "address", "email"}
+    # author details live in title_info.json (git-ignored): {"affiliation", "orcid", "address", "phone", "email"}
     import json, os
-    TI = {'affiliation': '[Affiliation]', 'orcid': '[ORCID iD]', 'address': '[postal address]', 'email': '[email]'}
+    TI = {'affiliation': '[Affiliation]', 'orcid': '[ORCID iD]', 'address': '[postal address]', 'phone': '[telephone]', 'email': '[email]'}
     if os.path.exists('title_info.json'): TI.update(json.load(open('title_info.json', encoding='utf-8')))
     L = WD_ALIGN_PARAGRAPH.LEFT; C = WD_ALIGN_PARAGRAPH.CENTER
     for _ in range(3): para(indent=False)
@@ -303,7 +303,7 @@ def title_page(full_note=True):
     para('Bo Yuan', indent=False, align=C)
     para(TI['address'], indent=False, align=C)
     for _ in range(2): para(indent=False)
-    p = para(indent=False, align=L); p.add_run('Corresponding author: ').bold = True; add_inline(p, 'Bo Yuan, ' + TI['address'] + '. Email: ' + TI['email'])
+    p = para(indent=False, align=L); p.add_run('Corresponding author: ').bold = True; add_inline(p, 'Bo Yuan, ' + TI['address'] + '. Telephone: ' + TI['phone'] + '. Email: ' + TI['email'])   # BRM: address, telephone, e-mail
     p = para(indent=False, align=L); p.add_run('ORCID: ').bold = True; add_inline(p, 'Bo Yuan, ' + TI['orcid'])
     if full_note:                                           # separate title page: also funding, CRediT and open practices
         p = para(indent=False, align=L); p.add_run('Funding and competing interests: ').bold = True
