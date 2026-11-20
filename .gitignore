@@ -38,3 +38,5 @@ __pycache__/
 05_Chen对比/logs/chen_key.txt
 05_Chen对比/logs/chen_cues.txt
 !LICENSE.md
+# submission package (contains author and reviewer contact details)
+07_论文/brmic_submission/
