@@ -154,17 +154,29 @@ def tokens(text, base=None):
 
 URL_RE = re.compile(r'https?://[^\s)\]]+?(?=[.,;:]?(?:\s|$|\)|\]))|[\w.+-]+@[\w-]+(?:\.[\w-]+)+(?<!\.)')   # web addresses, DOIs, e-mail
 LINK_BLUE = '0070C0'                                            # Word standard colour "Blue"
+def link_style():
+    # one character style "Hyperlink" in Word's standard colour Blue (0070C0), underlined: change it once in
+    # Format > Style and every link in the document follows
+    from docx.enum.style import WD_STYLE_TYPE
+    from docx.shared import RGBColor
+    names = [st.name for st in doc.styles]
+    if 'Hyperlink' in names: hs = doc.styles['Hyperlink']
+    else: hs = doc.styles.add_style('Hyperlink', WD_STYLE_TYPE.CHARACTER)
+    hs.font.color.rgb = RGBColor.from_string(LINK_BLUE); hs.font.underline = True
+    return hs.style_id
+
 def add_link(p, url, size=None, target=None):
     from docx.opc.constants import RELATIONSHIP_TYPE as RT
     rid = p.part.relate_to(target or url, RT.HYPERLINK, is_external=True)
     h = OxmlElement('w:hyperlink'); h.set(qn('r:id'), rid)
     r = OxmlElement('w:r'); rpr = OxmlElement('w:rPr')
-    c = OxmlElement('w:color'); c.set(qn('w:val'), LINK_BLUE); rpr.append(c)
-    u = OxmlElement('w:u'); u.set(qn('w:val'), 'single'); rpr.append(u)
+    if LINK_STYLE[0] is None: LINK_STYLE[0] = link_style()
+    rs = OxmlElement('w:rStyle'); rs.set(qn('w:val'), LINK_STYLE[0]); rpr.append(rs)
     if size:
         sz = OxmlElement('w:sz'); sz.set(qn('w:val'), str(int(size * 2))); rpr.append(sz)
     r.append(rpr); t = OxmlElement('w:t'); t.text = url; t.set(qn('xml:space'), 'preserve'); r.append(t)
     h.append(r); p._p.append(h)
+LINK_STYLE = [None]
 
 def add_inline(p, text, **extra):
     text = re.sub(r' ([=<>≤≥∈~]) ', '\u00a0\\1\u00a0', text)   # keep relations with their operands
@@ -303,7 +315,9 @@ def title_page(full_note=True):
     para('Bo Yuan', indent=False, align=C)
     para(TI['address'], indent=False, align=C)
     for _ in range(2): para(indent=False)
-    p = para(indent=False, align=L); p.add_run('Corresponding author: ').bold = True; add_inline(p, 'Bo Yuan, ' + TI['address'] + '. Telephone: ' + TI['phone'] + '. Email: ' + TI['email'])   # BRM: address, telephone, e-mail
+    p = para(indent=False, align=L); p.add_run('Corresponding author: ').bold = True; add_inline(p, 'Bo Yuan, ' + TI['address'])   # BRM: address, telephone, e-mail
+    p = para(indent=False, align=L); p.add_run('Telephone: ').bold = True; add_inline(p, TI['phone'])
+    p = para(indent=False, align=L); p.add_run('Email: ').bold = True; add_inline(p, TI['email'])
     p = para(indent=False, align=L); p.add_run('ORCID: ').bold = True; add_inline(p, 'Bo Yuan, ' + TI['orcid'])
     if full_note:                                           # separate title page: also funding, CRediT and open practices
         p = para(indent=False, align=L); p.add_run('Funding and competing interests: ').bold = True
