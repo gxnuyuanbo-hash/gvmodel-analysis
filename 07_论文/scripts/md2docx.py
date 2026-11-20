@@ -152,13 +152,33 @@ def tokens(text, base=None):
         buf += c; i += 1
     flush(); return out
 
+URL_RE = re.compile(r'https?://[^\s)\]]+?(?=[.,;:]?(?:\s|$|\)|\]))')
+LINK_BLUE = '0070C0'                                            # Word standard colour "Blue"
+def add_link(p, url, size=None):
+    from docx.opc.constants import RELATIONSHIP_TYPE as RT
+    rid = p.part.relate_to(url, RT.HYPERLINK, is_external=True)
+    h = OxmlElement('w:hyperlink'); h.set(qn('r:id'), rid)
+    r = OxmlElement('w:r'); rpr = OxmlElement('w:rPr')
+    c = OxmlElement('w:color'); c.set(qn('w:val'), LINK_BLUE); rpr.append(c)
+    u = OxmlElement('w:u'); u.set(qn('w:val'), 'single'); rpr.append(u)
+    if size:
+        sz = OxmlElement('w:sz'); sz.set(qn('w:val'), str(int(size * 2))); rpr.append(sz)
+    r.append(rpr); t = OxmlElement('w:t'); t.text = url; t.set(qn('xml:space'), 'preserve'); r.append(t)
+    h.append(r); p._p.append(h)
+
 def add_inline(p, text, **extra):
     text = re.sub(r' ([=<>≤≥∈~]) ', '\u00a0\\1\u00a0', text)   # keep relations with their operands
+    pos = 0
+    for m in URL_RE.finditer(text):                          # web addresses and DOIs become live links
+        _add_runs(p, text[pos:m.start()], **extra); add_link(p, m.group(0)); pos = m.end()
+    _add_runs(p, text[pos:], **extra)
+    return p
+
+def _add_runs(p, text, **extra):
     for t, f in tokens(text):
         r = p.add_run(t); r.bold = f['bold'] or extra.get('bold'); r.italic = f['italic'] or extra.get('italic')
         if f['sub']: r.font.subscript = True
         if f['sup']: r.font.superscript = True
-    return p
 
 def para(text='', indent=True, align=None, keep=False, **extra):
     p = doc.add_paragraph(); p.paragraph_format.first_line_indent = Inches(.5) if indent else Inches(0)
