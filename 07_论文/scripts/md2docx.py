@@ -4,7 +4,7 @@
 #                  References); repository links and author contributions are removed for review
 #   mode "title" : separate title page with author information and Author Note
 #   mode "supp"  : Supplementary Material (reads supp/Supplementary_Material_en.md; landscape)
-# Layout: US Letter, 1" margins, Times New Roman 12 pt, double spacing, running head and page number top right;
+# Layout: US Letter, 1" margins, Times New Roman 12 pt, double spacing, page number top right (no running head);
 # figures embedded after the paragraph that first cites them. Inline markup: **bold**, *italic*, x_sub / x_{sub},
 # x^sup / x^(sup) / x^{sup}.
 import re, sys
@@ -18,7 +18,6 @@ from docx.shared import Inches, Pt
 
 TABLE_WIDTH = [6.5]
 SRC, OUT = sys.argv[1], sys.argv[2]; MODE = sys.argv[3] if len(sys.argv) > 3 else 'main'
-RUNNING_HEAD = 'SPREADING BREADTH FROM REMOTE ASSOCIATES RESPONSES'
 FIGS = {1: 'figs/fig1_keycell_recovery.png', 2: 'figs/fig2_recovery_by_cell.png',
         3: 'figs/fig3_shrinkage_careless.png', 4: 'figs/fig4_sbc.png'}
 md = open(SRC, encoding='utf-8').read()
@@ -55,8 +54,8 @@ def field(run, code):
         if t: e = OxmlElement('w:fldChar'); e.set(qn('w:fldCharType'), t)
         else: e = OxmlElement('w:instrText'); e.set(qn('xml:space'), 'preserve'); e.text = txt
         run._r.append(e)
-hp = sec.header.paragraphs[0]; hp.paragraph_format.tab_stops.add_tab_stop(Inches(6.5), alignment=2)
-hp.add_run(RUNNING_HEAD + '\t'); field(hp.add_run(), 'PAGE')
+hp = sec.header.paragraphs[0]; 
+hp.alignment = WD_ALIGN_PARAGRAPH.RIGHT; field(hp.add_run(), 'PAGE')   # page number only, no running head
 
 # ---------------------------------------------------------------- inline parser
 SUBRUN = r'[A-Za-z0-9Ͱ-Ͽ]+(?:,[A-Za-z0-9Ͱ-Ͽ]+)*'
@@ -223,7 +222,6 @@ elif MODE == 'supp':
     sm = open('supp/Supplementary_Material_en.md', encoding='utf-8').read().split('\n')
     from docx.enum.section import WD_ORIENT
     sec.orientation = WD_ORIENT.LANDSCAPE; sec.page_width, sec.page_height = Inches(11), Inches(8.5)
-    hp.paragraph_format.tab_stops.add_tab_stop(Inches(9), alignment=2)
     para('Supplementary Material', indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, bold=True)
     para(sm[2].strip(), indent=False, align=WD_ALIGN_PARAGRAPH.CENTER, italic=True)
     TABLE_WIDTH[0] = 9.0

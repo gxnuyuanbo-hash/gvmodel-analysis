@@ -15,7 +15,7 @@ def table(num, title, head, rows, note):
     out = [f'**Table {num}**', f'*{title}*', '', '| ' + ' | '.join(head) + ' |', '|' + '---|' * len(head)]
     out += ['| ' + ' | '.join(r) + ' |' for r in rows]; return out + ['', f'*Note.* {note}', '']
 md = ['# Supplementary Material', '',
-      'Estimating individual spreading-activation breadth from remote associates responses: A generation–verification model', '']
+      'Estimating spreading-activation breadth and verification ability from remote associates responses: A generation–verification model', '']
 md += open('supp/S1_proofs_en.md', encoding='utf-8').read().strip().split('\n') + ['']
 # ---------------- S2: Simulation 3
 md += ['## Supplementary Material S2: Simulation 3 (careless responders)', '']

@@ -1,8 +1,8 @@
-# Analysis code: Estimating individual spreading-activation breadth from remote associates responses
+# Analysis code: Estimating spreading-activation breadth and verification ability from remote associates responses
 
 This repository contains the analysis code, simulation design, seeds, and summary results for the article
-*Estimating individual spreading-activation breadth from remote associates responses: A generation–verification
-model* (manuscript in preparation). The model itself is available as the R package **gvmodel**
+*Estimating spreading-activation breadth and verification ability from remote associates responses: A
+generation–verification model* (manuscript in preparation). The model itself is available as the R package **gvmodel**
 (https://github.com/gxnuyuanbo-hash/gvmodel).
 
 Folder names follow the working directories of the project (in Chinese); their content is described below. Data,
