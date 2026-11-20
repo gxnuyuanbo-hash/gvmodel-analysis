@@ -28,10 +28,10 @@ b = rd('S2b_person_by_group.csv')
 rows = [[C[r['cond']], 'Careless' if r['careless'] == 'TRUE' else 'Careful', f"{int(r['n']):,}", fb(r['b_true']), fb(r['b_mean']), fb(r['b_bias']), f2(r['cover_b']),
          fb(r['d_true']), fb(r['d_mean']), fb(r['d_bias']), f2(r['cover_d']), f2(r['r_b']), f2(r['r_d']), f2(r['pct_b']), f2(r['extreme'])] for r in b]
 md += table('S2', 'Simulation 3: person parameters of careful and careless responders',
-            ['Condition', 'Group', 'Persons', 'True *b*', 'Est. *b*', 'Bias *b*', 'Cov. *b*', 'True *v*', 'Est. *v*', 'Bias *v*', 'Cov. *v*', '*r*(*b*)', '*r*(*v*)', 'Pct. *b*', 'Detected'], rows,
+            ['Condition', 'Group', '*n*', 'True *b*', 'Est. *b*', 'Bias *b*', 'Cov. *b*', 'True *v*', 'Est. *v*', 'Bias *v*', 'Cov. *v*', '*r*(*b*)', '*r*(*v*)', 'Pct. *b*', 'Det.'], rows,
             'True values of careless responders are drawn from the same population but do not generate their responses, so their bias and coverage show where the estimates are pushed. '
             '*r*(*b*) and *r*(*v*) are computed for careful responders only (median within-data-set correlation). Pct. *b*: mean percentile of careless responders\' posterior breadth among all participants of the data set. '
-            'Detected: with *k* careless responders in a data set, the share of careless responders among the *k* participants with the highest (random) or lowest (give-up) posterior breadth.')
+            '*n*: number of persons. Det.: with *k* careless responders in a data set, the share of careless responders among the *k* participants with the highest (random) or lowest (give-up) posterior breadth.')
 c = rd('S2c_gridmatching.csv')
 rows = [[C[r['cond']], f2(r['r_chen_b']), f2(r['d_chen_b']), f2(r['r_chen_acc']), f2(r['d_chen_acc']), f2(r['D_b']), f2(r['stab']), r['n_est']] for r in c]
 md += table('S3', 'Simulation 3: grid matching with careless responders',
@@ -53,7 +53,7 @@ c = rd('S3c_gridmatching_convergence.csv'); c.sort(key=lambda r: (int(r['N']), i
 rows = [[r['N'], r['J'], r['sigma'], f2(r['r_chen_b']), f2(r['d_chen_b']), f2(r['r_chen_acc']), f2(r['d_chen_acc']), f2(r['stab']), r['n_est'], f"{int(r['n_rep']):,}",
          f2(r['converged']), f2(r['refitted']), f"{float(r['time_min']):.1f}"] for r in c]
 md += table('S6', 'Simulation 1, all 18 cells: grid-matching estimates and convergence of the generation–verification model',
-            ['*N*', '*J*', 'σ', '*r*(*r̂*, *b*)', '*r*(*d̂*, *b*)', '*r*(*r̂*, acc.)', '*r*(*d̂*, acc.)', 'Stability', 'Distinct estimates', 'Data sets', 'Converged', 'Refitted', 'Time (min)'], rows,
+            ['*N*', '*J*', 'σ', '*r*(*r̂*, *b*)', '*r*(*d̂*, *b*)', '*r*(*r̂*, acc.)', '*r*(*d̂*, acc.)', 'Stability', 'Distinct estimates', 'Data sets', 'Conv.', 'Refitted', 'Time (min)'], rows,
             '*r̂*, *d̂*: grid-matching estimates on the same data. Stability: grid-matching stability index (median over data sets). Distinct estimates: median number of distinct (*r̂*, *d̂*) pairs in a data set. '
-            'Converged: share of data sets with R̂ ≤ 1.01, bulk and tail ESS ≥ 400, and no divergent transitions after the refit rule. Time: median fitting time per data set.')
+            'Conv.: share of data sets with R̂ ≤ 1.01, bulk and tail ESS ≥ 400, and no divergent transitions after the refit rule. Time: median fitting time per data set.')
 open('supp/Supplementary_Material_en.md', 'w', encoding='utf-8').write('\n'.join(md) + '\n'); print('written supp/Supplementary_Material_en.md')

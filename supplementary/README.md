@@ -43,7 +43,7 @@ where *T*_ε sets components below ε to zero and leaves the others unchanged. T
 
 **Table S2. Simulation 3: person parameters of careful and careless responders**
 
-| Condition | Group | Persons | True *b* | Est. *b* | Bias *b* | Cov. *b* | True *v* | Est. *v* | Bias *v* | Cov. *v* | *r*(*b*) | *r*(*v*) | Pct. *b* | Detected |
+| Condition | Group | *n* | True *b* | Est. *b* | Bias *b* | Cov. *b* | True *v* | Est. *v* | Bias *v* | Cov. *v* | *r*(*b*) | *r*(*v*) | Pct. *b* | Det. |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Random 5% | Careful | 19,000 | −0.47 | −1.37 | −0.89 | .86 | 3.97 | 3.95 | −0.02 | .91 | .80 | .74 | — | — |
 | Random 5% | Careless | 1,000 | −0.52 | 3.25 | 3.76 | .33 | 3.95 | 1.64 | −2.31 | .02 | — | — | .96 | .72 |
@@ -54,7 +54,7 @@ where *T*_ε sets components below ε to zero and leaves the others unchanged. T
 | Give-up 10% | Careful | 18,000 | −0.53 | 0.01 | 0.54 | .90 | 3.96 | 4.00 | 0.04 | .92 | .79 | .77 | — | — |
 | Give-up 10% | Careless | 2,000 | −0.61 | −8.91 | −8.30 | .01 | 3.95 | 2.30 | −1.65 | .13 | — | — | .06 | .97 |
 
-*Note.* True values of careless responders are drawn from the same population but do not generate their responses, so their bias and coverage show where the estimates are pushed. *r*(*b*) and *r*(*v*) are computed for careful responders only (median within-data-set correlation). Pct. *b*: mean percentile of careless responders' posterior breadth among all participants of the data set. Detected: with *k* careless responders in a data set, the share of careless responders among the *k* participants with the highest (random) or lowest (give-up) posterior breadth.
+*Note.* True values of careless responders are drawn from the same population but do not generate their responses, so their bias and coverage show where the estimates are pushed. *r*(*b*) and *r*(*v*) are computed for careful responders only (median within-data-set correlation). Pct. *b*: mean percentile of careless responders' posterior breadth among all participants of the data set. *n*: number of persons. Det.: with *k* careless responders in a data set, the share of careless responders among the *k* participants with the highest (random) or lowest (give-up) posterior breadth.
 
 **Table S3. Simulation 3: grid matching with careless responders**
 
@@ -119,7 +119,7 @@ where *T*_ε sets components below ε to zero and leaves the others unchanged. T
 
 **Table S6. Simulation 1, all 18 cells: grid-matching estimates and convergence of the generation–verification model**
 
-| *N* | *J* | σ | *r*(*r̂*, *b*) | *r*(*d̂*, *b*) | *r*(*r̂*, acc.) | *r*(*d̂*, acc.) | Stability | Distinct estimates | Data sets | Converged | Refitted | Time (min) |
+| *N* | *J* | σ | *r*(*r̂*, *b*) | *r*(*d̂*, *b*) | *r*(*r̂*, acc.) | *r*(*d̂*, acc.) | Stability | Distinct estimates | Data sets | Conv. | Refitted | Time (min) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 50 | 12 | 1.5 | −.06 | −.05 | −.04 | −.62 | .92 | 4 | 200 | 1.00 | .06 | 1.5 |
 | 50 | 12 | 2.5 | −.07 | −.01 | .02 | −.63 | .93 | 4 | 200 | 1.00 | .03 | 1.2 |
@@ -140,5 +140,5 @@ where *T*_ε sets components below ε to zero and leaves the others unchanged. T
 | 200 | 24 | 2.5 | −.13 | −.07 | .09 | −.61 | .92 | 5 | 200 | 1.00 | .01 | 4.7 |
 | 200 | 24 | 3.5 | −.11 | −.11 | .20 | −.63 | .92 | 5 | 200 | 1.00 | .00 | 3.9 |
 
-*Note.* *r̂*, *d̂*: grid-matching estimates on the same data. Stability: grid-matching stability index (median over data sets). Distinct estimates: median number of distinct (*r̂*, *d̂*) pairs in a data set. Converged: share of data sets with R̂ ≤ 1.01, bulk and tail ESS ≥ 400, and no divergent transitions after the refit rule. Time: median fitting time per data set.
+*Note.* *r̂*, *d̂*: grid-matching estimates on the same data. Stability: grid-matching stability index (median over data sets). Distinct estimates: median number of distinct (*r̂*, *d̂*) pairs in a data set. Conv.: share of data sets with R̂ ≤ 1.01, bulk and tail ESS ≥ 400, and no divergent transitions after the refit rule. Time: median fitting time per data set.
 

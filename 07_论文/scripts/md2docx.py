@@ -230,15 +230,15 @@ def table(lines):
     t = doc.add_table(rows=len(rows), cols=len(rows[0])); t.alignment = WD_TABLE_ALIGNMENT.CENTER
     t.autofit = False; nc = len(rows[0])
     longest = max(len(re.sub(r'[*_]', '', r[0])) for r in rows)          # first column as wide as its content needs
-    w0 = min(1.15 if TABLE_WIDTH[0] < 7 else 1.6, max(.5, .075 * longest + .15)); ws = [w0] + [(TABLE_WIDTH[0] - w0) / (nc - 1)] * (nc - 1)
+    w0 = min(1.15 if TABLE_WIDTH[0] < 7 else 1.6, max(.5, .06 * longest + .12)); ws = [w0] + [(TABLE_WIDTH[0] - w0) / (nc - 1)] * (nc - 1)
     for j, w in enumerate(ws):
         for c in t.columns[j].cells: c.width = Inches(w)
     has_ci = any(re.search(r'\[.+,.+\]', v) for r in rows for v in r)
     size = 10 if nc < 8 or not has_ci else 9                              # intervals need room in wide tables
-    if nc >= 12: size = 8
-    tblPr = t._tbl.tblPr; mar = OxmlElement('w:tblCellMar')               # narrow cell margins (0.04 in)
+    if nc >= 12: size = 7                                                  # very wide supplementary tables
+    tblPr = t._tbl.tblPr; mar = OxmlElement('w:tblCellMar')               # narrow cell margins (0.03 in)
     for side in ('left', 'right'):
-        e = OxmlElement(f'w:{side}'); e.set(qn('w:w'), '58'); e.set(qn('w:type'), 'dxa'); mar.append(e)
+        e = OxmlElement(f'w:{side}'); e.set(qn('w:w'), '43'); e.set(qn('w:type'), 'dxa'); mar.append(e)
     look = tblPr.find(qn('w:tblLook'))                                   # schema order: tblCellMar before tblLook
     if look is not None: look.addprevious(mar)
     else: tblPr.append(mar)
