@@ -40,3 +40,6 @@ __pycache__/
 !LICENSE.md
 # submission package (contains author and reviewer contact details)
 07_论文/brmic_submission/
+# Supplementary Material (formatted file and browser version)
+!supplementary/README.md
+!supplementary/*.docx
