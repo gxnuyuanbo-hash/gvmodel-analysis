@@ -42,7 +42,7 @@ if MODE == 'main':
     decl = re.sub(r'https://github\.com/\S+?(?=[;.,]?(\s|$))', ANON, decl)
     decl = re.sub(r"(\*\*Authors' contributions\.\*\*).*", r'\1 [Removed for anonymous review; provided on the title page.]', decl)
 captions = {int(m.group(1)): (m.group(2).strip(), m.group(3).strip())
-            for m in re.finditer(r'\*\*Figure (\d)\.\*\* \*(.+?)\*\s*(.+)', caps)}
+            for m in re.finditer(r'\*\*Figure (\d)\.\*\* \*(.+?)\*[ \t]*(.*)', caps)}
 
 # ---------------------------------------------------------------- document setup
 doc = Document()
@@ -218,7 +218,7 @@ def figure(n):
     para(ttl, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, keep=True, italic=True)
     p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER; p.paragraph_format.keep_with_next = True
     p.add_run().add_picture(FIGS[n], width=Inches(6.5))
-    p = para(indent=False); p.add_run('Note. ').italic = True; add_inline(p, note)
+    if note: p = para(indent=False); p.add_run('Note. ').italic = True; add_inline(p, note)   # details are in the text
 
 # ---------------------------------------------------------------- render blocks
 placed = set()
