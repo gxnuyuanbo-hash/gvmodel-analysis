@@ -17,7 +17,7 @@ code, verification ability is written `d` (in the article, *v*).
 |---|---|---|
 | Beucler & De Neys (2026), osf.io/gfsb8 (LGPL-3.0) | empirical illustration | `python3 -I 01_数据/_scripts/osf_dl.py <OSF API url> 01_数据/gfsb8` or download from OSF into `01_数据/gfsb8/` |
 | SWOW-EN18 R123 strengths (De Deyne et al., 2019; CC BY-NC-ND, not redistributable) | semantic network | download `strength.SWOW-EN.R123.20180827.csv` from smallworldofwords.org into `01_数据/SWOW-EN18/unzipped/` |
-| Chen et al. (2026), osf.io/ex9mb | Chen et al.'s item networks (Section "Consequences on Real Networks", Simulation 2) | unzip `SemanticDistance_CorrelationMatrix.zip` into `01_数据/Chen2026_网络/unzipped/` (scripts read `path_wu/wu_<k>.xlsx`) and put `RawData_ModifiedFreeAssociationTask.xlsx` into `01_数据/Chen2026_自由联想/` |
+| Chen et al. (2026), osf.io/ex9mb | Chen et al.'s item networks (Section 2.2, Simulation 2) | unzip `SemanticDistance_CorrelationMatrix.zip` into `01_数据/Chen2026_网络/unzipped/` (scripts read `path_wu/wu_<k>.xlsx`) and put `RawData_ModifiedFreeAssociationTask.xlsx` into `01_数据/Chen2026_自由联想/` |
 | Chen, Xu, & Chen (2024), appendix | CWRAT cues and solutions | not redistributed; `05_Chen对比/chen_key.py` parses the item table from the article |
 
 ## Structure and order of execution
@@ -27,7 +27,7 @@ code, verification ability is written `d` (in the article, *v*).
 | `02_试跑/` | pilot models and toy data (development) | — |
 | `03_真实数据/` | network and activation (`build_activation.py`, `build_percue_v2.py`), candidate sets and Stan data (`prep_data.py`, `prep_wide.py`, `make_s1x.py`), model (`breadth_unified.stan`, `fit_unified.R <sample> <A–D> 600`), model comparison (`compare.R`), parameters and checks (`params_s1x.R`, `ppc.R`, `recheck_breadth_acc.R`), two-response analysis (`prep_twostage.py`, `compare_twostage.R`, `twostage_errors.py`); `logs/` holds all outputs | Empirical illustration; Tables 1–3 |
 | `04_参数还原/` | recovery pilot (100 data sets) | — |
-| `05_Chen对比/` | reimplementation of grid matching on SWOW (`chen_grid.py`, `chen_patterns.py`), Chen et al.'s networks (`chen_net_tmfg.R`, `chen_net_spread.py`, `chen_net_constants.py`), grid matching on its own generating process (`chen_net_home.py`, `chen_real_home.py`), stability (`chen_stability.py`) | What grid matching can identify; Simulation 2 |
+| `05_Chen对比/` | reimplementation of grid matching on SWOW (`chen_grid.py`, `chen_patterns.py`), Chen et al.'s networks (`chen_net_tmfg.R`, `chen_net_spread.py`, `chen_net_constants.py`), grid matching on its own generating process (`chen_net_home.py`, `chen_real_home.py`), stability (`chen_stability.py`) | Section 2 (identifiability of grid matching); Simulation 2 |
 | `06_正式模拟/` | design (`make_cells.py` → `cells.json`), data generation (`sim_gen.py`), fitting (`fit_cell.R`; SBC: `breadth_unified_sbc.stan`), grid matching on the same data (`chen_apply.py`), queue (`run_queue.sh full`, restartable), summaries (`summarize_sim.R` → `logs/summary_*.csv`), Simulation 2 (`sim_chen_home.py`) | Simulations 1–3 |
 | `07_论文/` | figures (`scripts/figs_sim.R` → `figs/`), supplementary tables (`scripts/tables_supp.R` → `supp/S2*.csv`, `supp/S3*.csv`; `scripts/supp_en.py` → Supplementary Material), Word files (`scripts/md2docx.py`) | Figures 1–4; Supplementary Material: proofs, Tables S1–S3 (Simulation 3; `supp/S2*.csv`), Tables S4–S6 (Simulation 1; `supp/S3*.csv`) |
 
