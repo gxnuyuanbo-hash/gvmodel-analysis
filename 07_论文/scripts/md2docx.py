@@ -81,20 +81,25 @@ def mel(tag, **attrs):
 def mrun(text):
     r = mel('r'); t = etree.SubElement(r, '{%s}t' % M); t.text = text; return r
 def equation(body, label):
-    # Word's native numbered display equation: oMathPara > oMath > eqArr > e[equation # (label)]
-    p = doc.add_paragraph(); p.paragraph_format.first_line_indent = Inches(0)
+    # display equation; a numbered one sits in a borderless 3-column table (blank | equation | number) so the
+    # number stays flush right in Word and in ScholarOne's PDF converter, which ignores Word's "#" numbering
     omath = TO_OMML(etree.fromstring(mathml(body))).getroot()
     if etree.QName(omath).localname == 'oMathPara': omath = omath.find('{%s}oMath' % M)   # the XSL wraps block math
     for pr in omath.iter('{%s}naryPr' % M):            # limits above and below the sum (limLoc follows chr)
         if pr.find('{%s}limLoc' % M) is None:
             pos = 1 if len(pr) and pr[0].tag == '{%s}chr' % M else 0; pr.insert(pos, mel('limLoc', val='undOvr'))
-    if label:
-        e = mel('e')
-        for ch in list(omath): e.append(ch)
-        e.append(mrun('#')); e.append(mrun('(' + label + ')'))
-        arr = mel('eqArr'); arr.append(e); omath.append(arr)
-    mp = mel('oMathPara'); mp.append(omath); p._p.append(mp)
-    return p
+    mp = mel('oMathPara'); mp.append(omath)
+    if not label:
+        p = doc.add_paragraph(); p.paragraph_format.first_line_indent = Inches(0); p._p.append(mp); return p
+    W = TABLE_WIDTH[0]; ws = [0.7, W - 1.4, 0.7]
+    t = doc.add_table(rows=1, cols=3); t.alignment = WD_TABLE_ALIGNMENT.CENTER; t.autofit = False
+    for j, w in enumerate(ws):
+        c = t.cell(0, j); c.width = Inches(w); borders(c)
+        c.vertical_alignment = 1                            # center
+        q = c.paragraphs[0]; q.paragraph_format.first_line_indent = Inches(0)
+    t.cell(0, 1).paragraphs[0]._p.append(mp)
+    q = t.cell(0, 2).paragraphs[0]; q.alignment = WD_ALIGN_PARAGRAPH.RIGHT; q.add_run('(' + label + ')')
+    return t
 # math font that matches Times New Roman (falls back to Cambria Math where STIX Two Math is not installed)
 _set = doc.settings.element
 mpr = _set.find('{%s}mathPr' % M)                       # the default template already has one: set its font
@@ -179,7 +184,7 @@ def add_link(p, url, size=None, target=None):
 LINK_STYLE = [None]
 
 def add_inline(p, text, **extra):
-    text = re.sub(r' ([=<>≤≥∈~]) ', '\u00a0\\1\u00a0', text)   # keep relations with their operands
+    text = re.sub(r' ([=<>≤≥∈~]) (?=[\d.−\-+(*_A-Za-zα-ωΑ-Ω](?:[^A-Za-z]|$))', '\u00a0\\1\u00a0', text)   # keep relations with short operands together
     pos = 0
     for m in URL_RE.finditer(text):                          # web addresses and DOIs become live links
         u = m.group(0); _add_runs(p, text[pos:m.start()], **extra)

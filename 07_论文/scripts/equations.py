@@ -47,12 +47,12 @@ EQS = {
     r'^\*U\*_\{ij0\}': (r(
         sub(i('U'), ij(n('0'))), o('='), g('κ'), o(','), gap(),
         sub(i('U'), ij(i('k'))), o('='), g('γ'), sub(i('s'), r(i('j'), i('k'))), paren(sub(i('b'), i('i'))), o('+'),
-        sub(i('v'), i('i')), n('1'), brack(i('k'), o('∈'), sub(i('𝒮'), i('j')))), '3'),
+        sub(i('v'), i('i')), n('1'), brack(i('k'), o('∈'), sub(i('S'), i('j')))), '3'),
     # Main text, "Responding": choice probabilities
     r'^Pr\(\*Y\*': (r(
         fn('Pr'), paren(sub(i('Y'), ij()), o('='), i('k')), o('='),
         frac(r(fn('exp'), paren(sub(i('U'), ij(i('k'))))),
-             r(sumunder(r(i('k′'), o('∈'), r(o('{'), n('0'), o('}')), o('∪'), sub(i('𝒦'), i('j')))),
+             r(sumunder(r(i('k′'), o('∈'), r(o('{'), n('0'), o('}')), o('∪'), sub(i('C'), i('j')))),
                fn('exp'), paren(sub(i('U'), ij(i('k′')))))), o('.')), '4'),
     # Main text, "Hierarchical structure"
     r'^\(\*bᵢ\*, \*vᵢ\*\)ᵀ ~': (r(
