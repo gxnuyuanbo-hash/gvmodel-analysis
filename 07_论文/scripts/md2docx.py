@@ -36,8 +36,13 @@ caps = section('## Figure captions', '## References')
 refs = section('## References', None)
 ANON = '[link removed for anonymous review]'
 if MODE == 'main':
+    # anonymous mirrors for reviewers (anonymous.4open.science, identifying terms redacted; expire 2027-04-20)
+    MIRROR = {'https://github.com/gxnuyuanbo-hash/gvmodel-analysis': 'https://anonymous.4open.science/r/gvmodel-analysis-58CF/',
+              'https://github.com/gxnuyuanbo-hash/gvmodel': 'https://anonymous.4open.science/r/gvmodel-5133/'}
+    for k, v in MIRROR.items():
+        opens = re.sub(re.escape(k) + r'(?![\w-])', v.rstrip('/'), opens); decl = re.sub(re.escape(k) + r'(?![\w-])', v.rstrip('/'), decl)
     opens = re.sub(r'https://github\.com/\S+?(?=[;.,]?(\s|$))', ANON, opens)
-    opens = re.sub(r'https://doi\.org/10\.5281/zenodo\.\d+', ANON, opens)   # Zenodo records show the author
+    opens = re.sub(r'archived on Zenodo \([^)]*\)', 'archived on Zenodo (DOIs withheld for anonymous review)', opens)   # Zenodo records show the author
     decl = re.sub(r' \(https://doi\.org/10\.5281/zenodo\.\d+\)', '', decl)   # DOI in parentheses after a masked link
     decl = re.sub(r'https://github\.com/\S+?(?=[;.,]?(\s|$))', ANON, decl)
     decl = re.sub(r"(\*\*Authors' contributions\.\*\*).*", r'\1 [Removed for anonymous review and provided on the title page.]', decl)
