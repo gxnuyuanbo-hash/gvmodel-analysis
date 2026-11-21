@@ -192,7 +192,18 @@ def add_inline(p, text, **extra):
     _add_runs(p, text[pos:], **extra)
     return p
 
+def rhat(p, letter='R', italic=True):
+    # hatted letter (R-hat, d-hat, r-hat) as a native Word accent: the combining circumflex (U+0302) drifts off
+    # the letter in ScholarOne's PDF converter
+    om = etree.Element('{%s}oMath' % M); acc = etree.SubElement(om, '{%s}acc' % M)
+    pr = etree.SubElement(acc, '{%s}accPr' % M); c = etree.SubElement(pr, '{%s}chr' % M); c.set('{%s}val' % M, '\u0302')
+    e = etree.SubElement(acc, '{%s}e' % M); e.append(mrun(letter)); p._p.append(om)
+
 def _add_runs(p, text, **extra):
+    m = re.search(r'([A-Za-z])\u0302', text)
+    if m:
+        _add_runs(p, text[:m.start()], **extra); rhat(p, m.group(1)); _add_runs(p, text[m.end():], **extra)
+        return
     for t, f in tokens(text):
         r = p.add_run(t); r.bold = f['bold'] or extra.get('bold'); r.italic = f['italic'] or extra.get('italic')
         if f['sub']: r.font.subscript = True
@@ -255,6 +266,10 @@ def table(lines):
             for r in p.runs:
                 r.font.size = Pt(size)
                 if i == 0 and SUPP_LEFT[0]: r.bold = True
+            for mr in p._p.iter('{%s}r' % M):                          # hatted letters (OMML) at the table's size
+                rpr = OxmlElement('w:rPr')
+                if i == 0 and SUPP_LEFT[0]: rpr.append(OxmlElement('w:b'))
+                sz = OxmlElement('w:sz'); sz.set(qn('w:val'), str(int(size * 2))); rpr.append(sz); mr.insert(0, rpr)
             borders(c, top=8 if i in (0, 1) else None, bottom=8 if i == len(rows) - 1 else None)
 
 def figure(n):
