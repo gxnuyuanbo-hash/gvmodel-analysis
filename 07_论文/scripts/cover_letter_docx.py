@@ -23,4 +23,5 @@ for block in paras:
     else: p.paragraph_format.alignment = 3 if len(block) > 200 else None   # justify body paragraphs
 z = doc.settings.element.find(qn('w:zoom'))
 if z is not None and z.get(qn('w:percent')) is None: z.set(qn('w:percent'), '100')   # schema-required attribute
+doc.core_properties.author = doc.core_properties.last_modified_by = 'Bo Yuan'   # file metadata
 doc.save('cover_letter.docx'); print('saved cover_letter.docx')

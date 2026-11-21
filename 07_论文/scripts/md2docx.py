@@ -392,4 +392,5 @@ elif MODE == 'supp':
     for r in p.runs: r.font.size = Pt(16)
     para(indent=False, align=WD_ALIGN_PARAGRAPH.CENTER)
     render('\n'.join(sm[4:]))
+doc.core_properties.author = doc.core_properties.last_modified_by = 'Bo Yuan'   # file metadata
 doc.save(OUT); print('saved', OUT, '(' + MODE + ')')
